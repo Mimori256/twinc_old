@@ -18,14 +18,17 @@ import kdb from "../assets/kdb.json"
 import parse from "../script/parse.js"
 
 var isMultiple = false;
-var output = "";
+
+var output = "BEGIN:VCALENDAR\n PRODID:-//gam0022//TwinCal 2.0//EN\n VERSION:2.1\n CALSCALE:GREGORIAN\n METHOD:PUBLISH\n X-WR-CALNAME:筑波大学 授業時間割\n X-WR-TIMEZONE:Asia/Tokyo\n X-WR-CALDESC:筑波大学 授業時間割\n BEGIN:VTIMEZONE\n TZID:Asia/Tokyo\n X-LIC-LOCATION:Asia/Tokyo\n BEGIN:STANDARD\n TZOFFSETFROM:+0901\n TZOFFSETTO:+0901\n TZNAME:JST\n DTSTART:19700102T000000\n END:STANDARD\n END:VTIMEZONE\n";
 
 export default {
   name: "Top",
   methods: {
 
     loadCsv(e) {
-      console.log("hello")
+
+      
+
       let vm = this;
       vm.workers = [];
       vm.message = "";
@@ -73,7 +76,9 @@ h1 {
 }
 
 #upload {
-  margin-left: 10%;
+  margin-left: 42%;
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
 
 .button {
