@@ -19,7 +19,7 @@ import parse from "../script/parse.js"
 
 var isMultiple = false;
 
-var output = "BEGIN:VCALENDAR\n PRODID:-//gam0022//TwinCal 2.0//EN\n VERSION:2.1\n CALSCALE:GREGORIAN\n METHOD:PUBLISH\n X-WR-CALNAME:筑波大学 授業時間割\n X-WR-TIMEZONE:Asia/Tokyo\n X-WR-CALDESC:筑波大学 授業時間割\n BEGIN:VTIMEZONE\n TZID:Asia/Tokyo\n X-LIC-LOCATION:Asia/Tokyo\n BEGIN:STANDARD\n TZOFFSETFROM:+0901\n TZOFFSETTO:+0901\n TZNAME:JST\n DTSTART:19700102T000000\n END:STANDARD\n END:VTIMEZONE\n";
+var output = "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinCal 2.0//EN\nVERSION:2.1\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:筑波大学 授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:筑波大学 授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0901\nTZOFFSETTO:+0901\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
 
 export default {
   name: "Top",
@@ -39,7 +39,7 @@ export default {
       console.log(reader.result);
       reader.onload = () => {
         let idList = reader.result.split("\n");
-        parse.parseCsv(idList, kdb); 
+        parse.parseCsv(idList, kdb, output); 
       }
     } ,
 
