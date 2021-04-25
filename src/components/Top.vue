@@ -17,17 +17,16 @@
 import kdb from "../assets/kdb.json"
 import parse from "../script/parse.js"
 
+var isUploaded = false
 var isMultiple = false;
 
-var output = "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinCal 2.0//EN\nVERSION:2.1\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:筑波大学 授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:筑波大学 授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0901\nTZOFFSETTO:+0901\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
+var output = "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinCal 2.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
 
 export default {
   name: "Top",
   methods: {
 
     loadCsv(e) {
-
-      
 
       let vm = this;
       vm.workers = [];
@@ -39,20 +38,41 @@ export default {
       console.log(reader.result);
       reader.onload = () => {
         let idList = reader.result.split("\n");
-        parse.parseCsv(idList, kdb, output); 
+        output += parse.parseCsv(idList, kdb);
+        isUploaded = true;
       }
     } ,
 
     submit() {
-      return 0;
-    }
+
+      if (isUploaded === false) {
+        alert("ファイルが選択されていません");
+      }
+
+      else {
+        output += "END:VCALENDAR";
+        var blob = new Blob([ output ], { "type" : "text/plain" });
+        var name = "icaltest.ics";
+
+        if (window.navigator.msSaveBlob) { 
+          window.navigator.msSaveBlob(new Blob([output], { type: "text/plain" }), name);
+        } 
+        
+        else {
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(new Blob([output], { type: "text/plain" }));
+          //a.target   = '_blank';
+          a.download = name;
+          document.body.appendChild(a) //  FireFox specification
+          a.click();
+          document.body.removeChild(a) //  FireFox specification
+        }
 
       }
+    } ,
+  }
 }
-
- 
 </script>    
-
 
 <style scoped>
 
