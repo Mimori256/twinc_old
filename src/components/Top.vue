@@ -3,11 +3,15 @@
     <sidebar class="sidebar-area"></sidebar>
     <div class="content" align="center">
       <router-view/>
-      <h1>TwinC(ツインシー)</h1>
       <p>TWINSからダウンロードしたCSVファイルを選択してください。</p>
       <input id="upload" type="file" accept=".csv" multiple @change="loadCsv"> 
-      <button class="button" v-on:click="submit">Submit</button>
-      <div id="result"></div>
+      <button class="button" v-on:click="submit">ダウンロード</button>
+      <span class="notice">
+        <p>試験期間、試験日の予定は登録されないことに注意してください</p>
+        <p>モジュールの期間は学年暦に基づいています</p>
+        <p>祝日に授業は登録されません</p>
+        <p>学年暦に表示されている振替には対応していますが、それ以外の振替には対応していません</p>
+      </span>
     </div>
   </div>
 </template>
@@ -18,8 +22,8 @@ import kdb from "../assets/kdb.json"
 import parse from "../script/parse.js"
 
 var isUploaded = false
-var isMultiple = false;
 
+var tmp = "";
 var output = "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinCal 2.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
 
 export default {
@@ -31,15 +35,16 @@ export default {
       let vm = this;
       vm.workers = [];
       vm.message = "";
-      let file = e.target.files[0];
+      let files = e.target.files;
 
-      let reader = new FileReader();
-      reader.readAsText(file);
-      console.log(reader.result);
-      reader.onload = () => {
-        let idList = reader.result.split("\n");
-        output += parse.parseCsv(idList, kdb);
+      for (let i=0,f; f=files[i]; i++) {
+
+        let reader = new FileReader();
+        reader.readAsText(f);
+        reader.onload = () => {
+        tmp += reader.result;
         isUploaded = true;
+        }
       }
     } ,
 
@@ -50,7 +55,9 @@ export default {
       }
 
       else {
-        output += "END:VCALENDAR";
+        let idList = tmp.split("\n").filter((x, i, self) => self.indexOf(x) === i);
+        console.log(idList);
+        output = output + parse.parseCsv(idList, kdb) + "END:VCALENDAR";
         var blob = new Blob([ output ], { "type" : "text/plain" });
         var name = "icaltest.ics";
 
@@ -85,15 +92,18 @@ h1 {
   float: left;
 }
 
-.content{
+.content {
+  color: gray;
   display: flex;
   align: center;
   background-color: white;
   flex-direction: column;
   min-height: 100vh; 
-  width: 90%;
-  margin: 0 0 0 20%;
+  width: 95%;
+  margin: 0 0 0 8%;
 }
+
+
 
 #upload {
   margin-left: 42%;
@@ -119,6 +129,7 @@ h1 {
   cursor: pointer;
   outline: none;
   margin-left: 42%; 
+  margin-bottom: 5%;
   }
 
 .button:hover {

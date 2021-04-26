@@ -23,14 +23,14 @@ div{
 }
 
 .link-area {
-  padding-top: 10px;
-  padding-right: 100px;
+  padding-top: 0%;
+  padding-right: 10%;
 }
 
 .sidebar-link {
   color: #808782;
-  font-size: 30px;
-  padding-bottom: 50px;
+  font-size: 2.0rem;
+  margin-bottom: 5%;
   text-decoration: none;
 }
 

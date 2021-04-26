@@ -2,13 +2,24 @@
 const beginSpringA = {"月": "20210412", "火": "20210413", "水": "20210414", "木": "20210408", "金": "20210409"};
 const beginSpringB = {"月": "20210524", "火": "20210525", "水": "20210526", "木": "20210520", "金": "20210521"};
 const beginSpringC = {"月": "20210705", "火": "20210706", "水": "20210707", "木": "20210701", "金": "20210702"};
-const springEndDate = {"A": "20210518T130000Z;", "B": "20210630T130000Z;", "C": "20210805T130000Z;"}
+const beginFallA = {"月": "20211004", "火": "20211005", "水": "20211006", "木": "20211007", "金": "20211001"};
+const beginFallB = {"月": "20211115", "火": "20211116", "水": "20211117", "木": "20211111", "金": "20211112"};
+const beginFallC = {"月": "20220124", "火": "20220111", "水": "20220112", "木": "20220106", "金": "20210107"};
+
+const springEndDate = {"A": "20210518T130000Z;", "B": "20210630T130000Z;", "C": "20210805T130000Z;"};
+const fallEndDate = {"A": "20211110", "B": "20211228", "C": "20220217"};
 
 const engWeekday =  {"月": "MO", "火": "TU", "水": "WE", "木": "TH", "金": "FR"};
 
-//the head element is a dummy 
+//the head element(0) is a dummy 
 const classBeginPeriod = ["0", "084000", "101000", "121500", "134500", "151500", "164500"];
 const classEndPeriod = ["0", "095500", "112500", "133000", "150000", "163000", "180000"];
+
+const springAHoliday = ["20210429", "20210503", "20210504", "20210505"];
+const springBHoliday = []; 
+const springCHoliday = ["20210723"];
+const fallAHoliday = ["20211103", "20211105", "20211108",];
+const fallBHoliday = ["20211123", ]
 
 
 function addZero(str) {
@@ -23,7 +34,6 @@ function addZero(str) {
 
 function isAvailableModule(module) {
 
-  //Spring term
   if (module.indexOf("春") == -1 && module.indexOf("秋") == -1) {
     return false;
   }
@@ -76,7 +86,23 @@ function getSpan(module, period) {
       }
   }
 
-  //Todo: Fall term
+  else {
+
+    switch(module[1]) {
+
+      case "A":
+        beginDate = beginFallA[period[0]];
+        break;
+
+      case "B":
+        beginDate = beginFallB[period[0]];
+        break;
+
+      case "C":
+        beginDate = beginFallC[period[0]];
+        break;
+      }
+  }
 
   //Get the start and end time of the course
   let beginPeriod = classBeginPeriod[parseInt(period.slice(1, 2))];
@@ -90,12 +116,15 @@ function getSpan(module, period) {
 function getRepeat(module, period) {
 
   let rrule = "RRULE:FREQ=WEEKLY;UNTIL=";
+  let exdate = "EXDATE;TZID=Asia/Tokyo:";
 
   if (module[0] == "春") {
     rrule += springEndDate[module.slice(-1)];
   }
 
-  //Todo: Fall term
+  else {
+    rrule += fallEndDate[module.slice(-1)];
+  }
 
   rrule += "BYDAY=" + engWeekday[period[0]] + "\n";
   return rrule;
@@ -140,10 +169,11 @@ function parseCsv(idList, kdb) {
   const eventBegin = "BEGIN:VEVENT\n";
   const eventEnd = "\nEND:VEVENT\n";
   let courseList = [];
+  console.log(kdb);
 
   //Search  a course
-  for (let i=0; i<idList.length; i++) {
-    courseList.push(kdb[String(idList[i])]);
+  for (let i=0; i<idList.length-1; i++) {
+    courseList.push(kdb[idList[i]]);
   }
 
   for (let i=0; i<courseList.length-1; i++) {

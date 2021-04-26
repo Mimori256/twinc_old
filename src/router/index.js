@@ -10,7 +10,8 @@ export default new Router({
     {
       path: '/',
       name: 'Top',
-      component: Top
+      component: Top,
+      meta: {title: "TwinC", desc: "TWINSのデータをics方式に変換する"}
     },
     {
       path: '/Help',
