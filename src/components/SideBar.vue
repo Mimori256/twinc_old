@@ -16,20 +16,20 @@ div{
     position: left;
     background-color: white;
     height: 100%;
-    width: 1%; 
     position: fixed; 
+    width: 1%; 
     box-sizing: border-box;
-    padding-left: 0.8%; 
+    padding-left: 0.5%; 
 }
 
 .link-area {
   padding-top: 0%;
-  padding-right: 10%;
+  padding-right: 5%;
 }
 
 .sidebar-link {
   color: #808782;
-  font-size: 2.0rem;
+  font-size: 2.1rem;
   margin-bottom: 5%;
   text-decoration: none;
 }

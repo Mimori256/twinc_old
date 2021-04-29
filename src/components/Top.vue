@@ -4,14 +4,25 @@
     <div class="content" align="center">
       <router-view/>
       <p>TWINSからダウンロードしたCSVファイルを選択してください。</p>
-      <input id="upload" type="file" accept=".csv" multiple @change="loadCsv"> 
+
+      <label>
+        <input id="upload" type="file" accept=".csv" multiple @change="loadCsv;upload">ファイルの選択
+      </label>
+
       <button class="button" v-on:click="submit">ダウンロード</button>
+      
       <span class="notice">
+        <span class="warn"><p>生成したicsファイルは新しく作ったカレンダーにインポートしてください！</p></span>
         <p>試験期間、試験日の予定は登録されないことに注意してください</p>
         <p>モジュールの期間は学年暦に基づいています</p>
         <p>祝日に授業は登録されません</p>
         <p>学年暦に表示されている振替には対応していますが、それ以外の振替には対応していません</p>
       </span>
+
+      <span class="help_link">
+        <p>詳しい使い方は<router-link to="/Help" class="link">Help</router-link>を参照してください</p>
+      </span>
+
     </div>
   </div>
 </template>
@@ -21,13 +32,14 @@
 import kdb from "../assets/kdb.json"
 import parse from "../script/parse.js"
 
-var isUploaded = false
 
 var tmp = "";
 var output = "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinCal 2.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
+var isUploaded = false;
 
 export default {
   name: "Top",
+
   methods: {
 
     loadCsv(e) {
@@ -99,26 +111,64 @@ h1 {
   background-color: white;
   flex-direction: column;
   min-height: 100vh; 
-  width: 95%;
-  margin: 0 0 0 8%;
+  width: 90%;
+  margin: 0 0 0 15%;
 }
 
+.warn {
+  font-size: 1.1rem;
+  color: deeppink;
+}
 
+.help_link {
+  font-size: 1.3rem;
+}
 
-#upload {
-  margin-left: 42%;
+.link {
+  color: #5ecfd1;
+}
+
+label {
+  position: center;
+  width: 20%;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.0rem;
+  letter-spacing: 0.1%;
+  font-weight: 400;
+  color: #000;
+  line-height: 2.5rem;
+  background-color: #ddd;
+  border: none;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
   margin-top: 5%;
+  margin-left: 41%; 
   margin-bottom: 5%;
+
 }
+
+input[type="file"] {
+    display: none;
+}
+
+label:hover {
+  background-color: #5ecfd1;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
 
 .button {
   position: center;
-  width: 140px;
-  height: 45px;
+  width: 20%;
+  height: 2.5rem;
   font-family: 'Roboto', sans-serif;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 2.5px;
+  font-size: 0.9rem;
+  letter-spacing: 0.1%;
   font-weight: 500;
   color: #000;
   background-color: #ddd;
@@ -128,7 +178,7 @@ h1 {
   transition: all 0.3s ease 0s;
   cursor: pointer;
   outline: none;
-  margin-left: 42%; 
+  margin-left: 41%; 
   margin-bottom: 5%;
   }
 
