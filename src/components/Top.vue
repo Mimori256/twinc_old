@@ -9,6 +9,8 @@
         <input id="upload" type="file" accept=".csv" multiple @change="loadCsv">ファイルの選択
       </label>
 
+      <span id="fileName">ファイル:<!--The name of the file uploaded--></span>
+
       <button class="button" v-on:click="submit">ダウンロード</button>
       
       <span class="notice">
@@ -48,14 +50,17 @@ export default {
       vm.workers = [];
       vm.message = "";
       let files = e.target.files;
+      let fileNameList = [];
 
       for (let i=0,f; f=files[i]; i++) {
 
         let reader = new FileReader();
+        fileNameList.push(f.name);
         reader.readAsText(f);
         reader.onload = () => {
         tmp += reader.result;
         isUploaded = true;
+        console.log(fileNameList);
         console.log("finish")
         }
       }
@@ -86,6 +91,11 @@ export default {
           a.click();
           document.body.removeChild(a) //  FireFox specification
         }
+
+        //Clear selected file
+        let fileObject = document.getElementById("upload");
+        fileObject.value = "";
+        isUploaded = false;
 
       }
     } ,
