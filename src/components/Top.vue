@@ -6,7 +6,7 @@
       <p>TWINSからダウンロードしたCSVファイルを選択してください。</p>
 
       <label>
-        <input id="upload" type="file" accept=".csv" multiple @change="loadCsv;upload">ファイルの選択
+        <input id="upload" type="file" accept=".csv" multiple @change="loadCsv">ファイルの選択
       </label>
 
       <button class="button" v-on:click="submit">ダウンロード</button>
@@ -56,6 +56,7 @@ export default {
         reader.onload = () => {
         tmp += reader.result;
         isUploaded = true;
+        console.log("finish")
         }
       }
     } ,
@@ -68,7 +69,6 @@ export default {
 
       else {
         let idList = tmp.split("\n").filter((x, i, self) => self.indexOf(x) === i);
-        console.log(idList);
         output = output + parse.parseCsv(idList, kdb) + "END:VCALENDAR";
         var blob = new Blob([ output ], { "type" : "text/plain" });
         var name = "icaltest.ics";

@@ -6,8 +6,8 @@ const beginFallA = {"月": "20211004", "火": "20211005", "水": "20211006", "�
 const beginFallB = {"月": "20211115", "火": "20211116", "水": "20211117", "木": "20211111", "金": "20211112"};
 const beginFallC = {"月": "20220124", "火": "20220111", "水": "20220112", "木": "20220106", "金": "20210107"};
 
-const springEndDate = {"A": "20210518T130000Z;", "B": "20210624T130000Z;", "C": "20210802T130000Z;"};
-const fallEndDate = {"A": "20211110T130000Z", "B": "20211222T130000Z", "C": "20220208T130000Z"};
+const springEndDate = {"A": "20210518T130000Z;", "B": "20210623T130000Z;", "C": "20210805T130000Z;"};
+const fallEndDate = {"A": "20211109T130000Z", "B": "20211221T130000Z", "C": "20220215T130000Z"};
 
 const engWeekday =  {"月": "MO", "火": "TU", "水": "WE", "木": "TH", "金": "FR"};
 
@@ -15,12 +15,15 @@ const engWeekday =  {"月": "MO", "火": "TU", "水": "WE", "木": "TH", "金": 
 const classBeginPeriod = ["0", "084000", "101000", "121500", "134500", "151500", "164500"];
 const classEndPeriod = ["0", "095500", "112500", "133000", "150000", "163000", "180000"];
 
-const springAHolidays = ["20210429", "20210503", "20210504", "20210505"];
+const springAHolidays = ["20210429", "20210503", "20210504", "20210505", "20210507", "20210519"];
 const springBHolidays = []; 
-const springCHolidays = ["20210723"];
+const springCHolidays = ["20210722", "20210723"];
 const fallAHolidays = ["20211103", "20211105", "20211108"];
-const fallBHolidays = ["20211123"];
-const fallCHolidays = ["20220114", "20220211"];
+const fallBHolidays = ["20211123", "20211129", "20211130"];
+const fallCHolidays = ["20220110", "20220114","20220117", "20220211"];
+
+const springABCHolidays = ["20210429", "20210503", "20210504", "20210505", "20210507", "20210519", "20210722", "20210723"];
+const fallABCHolidays = ["20211103", "20211105", "20211108", "20211123", "20211129", "20211130", "20220110", "20220114","20220117", "20220204", "20220211"];
 
 
 function addZero(str) {
@@ -142,6 +145,25 @@ function getRepeat(module, period) {
   return rrule + exdate;
 }
 
+function getABCRepeat(module, period) {
+  
+  let rrule = "RRULE:FREQ=WEEKLY;UNTIL=";
+  let exdate;
+
+  if (module[0] == "春") {
+    rrule += "20210729T130000Z;";
+  }
+
+  //Fall
+  else {
+    rrule += "20220208T130000Z;";
+}
+
+  rrule += "BYDAY=" + engWeekday[period[0]] + "\n";
+  exdate = removeABCHolidays(module,period);
+  return rrule + exdate;
+}
+
 
 function getMisc(name, classroom, desc) {
 
@@ -204,9 +226,36 @@ function removeHolidays(module, period) {
       break;
   }
 
-    for(let i=0; i<holidaysList.length; i++) {
-      exdate += holidaysList[i] + "T" + beginPeriod + ",";
-    }
+  //Check if the list is blank
+  if(holidaysList.length == 0) {
+    return "";
+  }
+
+  for(let i=0; i<holidaysList.length; i++) {
+    exdate += holidaysList[i] + "T" + beginPeriod + ",";
+  }
+
+  return exdate + "\n";
+}
+
+
+function removeABCHolidays(module, period) {
+
+  let beginPeriod = classBeginPeriod[period.slice(1, 2)];
+  let holidaysList;
+  let exdate = "EXDATE:";
+
+  if(module[0] == "春") {
+    holidaysList = springABCHolidays;
+  }
+
+  else {
+    holidaysList = fallABCHolidays;
+  }
+
+  for(let i=0; i<holidaysList.length; i++) {
+    exdate += holidaysList[i] + "T" + beginPeriod + ",";
+  }
 
   return exdate + "\n";
 }
@@ -246,10 +295,9 @@ function parseCsv(idList, kdb) {
 
       let devidedModule = "";
       let devidedPeriod;
+      let isABC;
 
       if (period.length > 4 || period.indexOf("・") != -1 ) {
-        console.log(period);
-        console.log(formedPeriod(period));
         devidedPeriod = formedPeriod(period).split(",");
       }
 
@@ -261,14 +309,32 @@ function parseCsv(idList, kdb) {
 
         for (let l=0; l<devidedPeriod.length; l++) {
         
-          devidedModule = module[0] + module[j];
-          icsEvent = getSpan(devidedModule, devidedPeriod[l]) + getRepeat(devidedModule, devidedPeriod[l]) + removeHolidays(devidedModule, period) + getMisc(name, classroom, description);
-          output += eventBegin + icsEvent + eventEnd;
+          if (module.slice(1) == "ABC") {
+            devidedModule = module[0] + module[1];
+            icsEvent = getSpan(devidedModule, devidedPeriod[l]) + getABCRepeat(devidedModule, devidedPeriod[l]) + getMisc(name, classroom, description);
+            output += eventBegin + icsEvent + eventEnd;
+            isABC = true;
           }
+
+          else {
+            devidedModule = module[0] + module[j];
+            icsEvent = getSpan(devidedModule, devidedPeriod[l]) + getRepeat(devidedModule, devidedPeriod[l]) + getMisc(name, classroom, description);
+            output += eventBegin + icsEvent + eventEnd;
+            isABC = false;
+            }
+
+          }
+
+          if (isABC === true) {
+            break;
+          }
+
         }
+      
     }
   }
   return output;
 }
+
 
 export default { parseCsv };
