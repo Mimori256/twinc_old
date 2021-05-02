@@ -170,7 +170,9 @@ function isWeekday(period) {
 function formedPeriod(period) {
   if (period.indexOf("・") != -1 && period.length == 4) {
     period = period.replace("・", ",");
-    return period[0] + period.slice(-1) + period.slice(2, 4);
+    return (period[0] + period.slice(-1) + period.slice(2, 4)).split(",");
+  } else if (period.indexOf("・") != -1 && period.length == 6) {
+    return (period[0] + period.slice(3) + period.slice(1)).split("・");
   } else {
     return period;
   }
@@ -415,12 +417,10 @@ function parseCsv(idList, kdb) {
       let isABC;
 
       if (period.length > 4 || period.indexOf("・") != -1) {
-        devidedPeriod = formedPeriod(period).split(",");
+        devidedPeriod = formedPeriod(period);
       } else {
         devidedPeriod = [period];
       }
-
-      console.log(devidedPeriod);
 
       for (let j = 1; j < module.length; j++) {
         for (let l = 0; l < devidedPeriod.length; l++) {
@@ -450,7 +450,7 @@ function parseCsv(idList, kdb) {
 
       //reschedule
       if (period.length > 4 || period.indexOf("・") != -1) {
-        devidedPeriod = formedPeriod(period).split(",");
+        devidedPeriod = formedPeriod(period);
       } else {
         devidedPeriod = [period];
       }

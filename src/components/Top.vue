@@ -89,8 +89,12 @@ export default {
           .split("\n")
           .filter((x, i, self) => self.indexOf(x) === i);
         output = output + parse.parseCsv(idList, kdb) + "END:VCALENDAR";
-        var blob = new Blob([output], { type: "text/plain" });
-        var name = "icaltest.ics";
+        let blob = new Blob([output], { type: "text/plain" });
+        let now = new Date();
+        let hour = ("0" + now.getHours()).slice(-2);
+        let minute = ("0" + now.getMinutes()).slice(-2);
+        let second = ("0" + now.getSeconds()).slice(-2);
+        let name = `${hour}-${minute}-${second}${"twinc.ics"}`;
 
         if (window.navigator.msSaveBlob) {
           window.navigator.msSaveBlob(
@@ -115,6 +119,7 @@ export default {
         document.getElementById("fileName").innerHTML =
           "ファイルは選択されていません";
         isUploaded = false;
+        location.reload();
       }
     }
   }

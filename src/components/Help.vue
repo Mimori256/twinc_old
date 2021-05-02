@@ -7,18 +7,25 @@
           <p>
             TWINSにログインして、履修→カレンダーにしたいモジュールの下のダウンロードボタンから、CSVファイルを出力してください。
           </p>
-          <img src="@/assets/img/twinc1.png" width="80%" height="35%" />
+          <img src="@/assets/img/twinc1.png" width="80%" height="30%" />
           <p>(ちなみに、このファイルはTwin:teの授業登録にも使えます)</p>
           <p>
-            次に、そのファイルをトップページで選択してから、ダウンロードボタンを押して、twinc.icsファイルをダウンロードしてください。
+            次に、そのファイルをトップページで選択してから、ダウンロードボタンを押して、ファイルをダウンロードしてください。
+          </p>
+          <img src="@/assets/img/download.png" width="80%" />
+          <p>
+            ちなみに、ファイル名は(ダウンロード時刻) + twinc.icsとなっています
           </p>
           <p>
             ここではGoogleカレンダーを例にします。Macのカレンダーなどに追加したい場合は自分で調べてください。
           </p>
           <p>
-            <a href="https://calendar.google.com/"
+            <a
+              href="https://calendar.google.com/"
+              target="_blank"
+              rel="noopener"
               >Googleカレンダーのトップページ</a
-            >から、設定を開いてください。
+            >の右上から、設定を開いてください。
           </p>
           <img src="@/assets/img/twinc2.png" width="80%" />
           <p>
@@ -26,9 +33,10 @@
           </p>
           <img src="@/assets/img/twinc3.png" width="80%" />
           <p>
-            最期に、インポート/エクスポート→インポートから、<span id="warn"
-              >自分が作成したカレンダーを選択してから</span
-            >パソコンからファイルを選択をクリックして、twinc.icsを選択、インポートをクリックしてください
+            カレンダーが生成されるまで待ってから、インポート/エクスポート→インポートから、カレンダーに追加で、<span
+              id="warn"
+              ><u>自分が作成したカレンダーを選択してから</u></span
+            >パソコンからファイルを選択をクリックして、ダウンロードしたファイルを選択、インポートをクリックしてください
           </p>
           <img src="@/assets/img/twinc4.png" width="80%" />
           <p>
