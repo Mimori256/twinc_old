@@ -1,48 +1,50 @@
 <template>
-  <div class="top">
-    <sidebar class="sidebar-area"></sidebar>
-    <div class="content" align="center">
-      <router-view />
-      <p>TWINSからダウンロードしたCSVファイルを選択してください。</p>
+  <transition appear>
+    <div class="top">
+      <sidebar class="sidebar-area"></sidebar>
+      <div class="content" align="center">
+        <router-view />
+        <p>TWINSからダウンロードしたCSVファイルを選択してください。</p>
 
-      <label>
-        <input
-          id="upload"
-          type="file"
-          accept=".csv"
-          multiple
-          @change="loadCsv"
-        />ファイルの選択
-      </label>
+        <label>
+          <input
+            id="upload"
+            type="file"
+            accept=".csv"
+            multiple
+            @change="loadCsv"
+          />ファイルの選択
+        </label>
 
-      <span id="fileName"
-        >ファイルは選択されていません<!--The name of the file uploaded--></span
-      >
-
-      <button class="button" v-on:click="submit">ダウンロード</button>
-
-      <span class="notice">
-        <span class="warn"
-          ><p>
-            生成したicsファイルは新しく作ったカレンダーにインポートしてください！
-          </p></span
+        <span id="fileName"
+          >ファイルは選択されていません<!--The name of the file uploaded--></span
         >
-        <p>試験期間、試験日の予定は登録されないことに注意してください</p>
-        <p>モジュールの期間は学年暦に基づいています</p>
-        <p>祝日に授業は登録されません</p>
-        <p>
-          学年暦に表示されている振替には対応していますが、それ以外の振替には対応していません
-        </p>
-      </span>
 
-      <span class="help_link">
-        <p>
-          詳しい使い方は<router-link to="/Help" class="link">Help</router-link
-          >を参照してください
-        </p>
-      </span>
+        <button class="button" v-on:click="submit">ダウンロード</button>
+
+        <span class="notice">
+          <span class="warn"
+            ><p>
+              生成したicsファイルは新しく作ったカレンダーにインポートしてください！
+            </p></span
+          >
+          <p>試験期間、試験日の予定は登録されないことに注意してください</p>
+          <p>モジュールの期間は学年暦に基づいています</p>
+          <p>祝日に授業は登録されません</p>
+          <p>
+            学年暦に表示されている振替には対応していますが、それ以外の振替には対応していません
+          </p>
+        </span>
+
+        <span class="help_link">
+          <p>
+            詳しい使い方は<router-link to="/Help" class="link">Help</router-link
+            >を参照してください
+          </p>
+        </span>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -215,5 +217,17 @@ label:hover {
   box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
   color: #fff;
   transform: translateY(-7px);
+}
+
+.v-enter {
+  opacity: 0;
+}
+
+.v-enter-to {
+  opacity: 1;
+}
+
+.v-enter-active {
+  transition: all 500ms;
 }
 </style>

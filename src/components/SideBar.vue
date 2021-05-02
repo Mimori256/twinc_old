@@ -1,25 +1,30 @@
 <template>
   <div>
     <main>
-        <div class="sidebar">
-          <div class="link-area">
-            <p><router-link to="/" class="sidebar-link">Top</router-link></p><br>
-            <p><router-link to="/Help" class="sidebar-link">Help</router-link></p>
-          </div>
+      <div class="sidebar">
+        <div class="link-area">
+          <p><router-link to="/" class="sidebar-link">Top</router-link></p>
+          <br />
+          <p><router-link to="/Help" class="sidebar-link">Help</router-link></p>
+          <br />
+          <p>
+            <router-link to="/About" class="sidebar-link">About</router-link>
+          </p>
         </div>
+      </div>
     </main>
   </div>
 </template>
 <style>
-div{
-    flex-direction: column;
-    position: left;
-    background-color: white;
-    height: 100%;
-    position: fixed; 
-    width: 1%; 
-    box-sizing: border-box;
-    padding-left: 0.5%; 
+div {
+  flex-direction: column;
+  position: left;
+  background-color: white;
+  height: 100%;
+  position: fixed;
+  width: 1%;
+  box-sizing: border-box;
+  padding-left: 0.5%;
 }
 
 .link-area {
@@ -37,6 +42,4 @@ div{
 .sidebar-link:hover {
   color: #5ecfd1;
 }
-
-
 </style>
