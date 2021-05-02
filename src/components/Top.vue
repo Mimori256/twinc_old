@@ -2,109 +2,124 @@
   <div class="top">
     <sidebar class="sidebar-area"></sidebar>
     <div class="content" align="center">
-      <router-view/>
+      <router-view />
       <p>TWINSからダウンロードしたCSVファイルを選択してください。</p>
 
       <label>
-        <input id="upload" type="file" accept=".csv" multiple @change="loadCsv">ファイルの選択
+        <input
+          id="upload"
+          type="file"
+          accept=".csv"
+          multiple
+          @change="loadCsv"
+        />ファイルの選択
       </label>
 
-      <span id="fileName">ファイル:<!--The name of the file uploaded--></span>
+      <span id="fileName"
+        >ファイルは選択されていません<!--The name of the file uploaded--></span
+      >
 
       <button class="button" v-on:click="submit">ダウンロード</button>
-      
+
       <span class="notice">
-        <span class="warn"><p>生成したicsファイルは新しく作ったカレンダーにインポートしてください！</p></span>
+        <span class="warn"
+          ><p>
+            生成したicsファイルは新しく作ったカレンダーにインポートしてください！
+          </p></span
+        >
         <p>試験期間、試験日の予定は登録されないことに注意してください</p>
         <p>モジュールの期間は学年暦に基づいています</p>
         <p>祝日に授業は登録されません</p>
-        <p>学年暦に表示されている振替には対応していますが、それ以外の振替には対応していません</p>
+        <p>
+          学年暦に表示されている振替には対応していますが、それ以外の振替には対応していません
+        </p>
       </span>
 
       <span class="help_link">
-        <p>詳しい使い方は<router-link to="/Help" class="link">Help</router-link>を参照してください</p>
+        <p>
+          詳しい使い方は<router-link to="/Help" class="link">Help</router-link
+          >を参照してください
+        </p>
       </span>
-
     </div>
   </div>
 </template>
 
 <script>
-
-import kdb from "../assets/kdb.json"
-import parse from "../script/parse.js"
-
+import kdb from "../assets/kdb.json";
+import parse from "../script/parse.js";
 
 var tmp = "";
-var output = "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinCal 2.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
+var output =
+  "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinCal 2.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
 var isUploaded = false;
 
 export default {
   name: "Top",
 
   methods: {
-
     loadCsv(e) {
-
       let vm = this;
       vm.workers = [];
       vm.message = "";
       let files = e.target.files;
       let fileNameList = [];
 
-      for (let i=0,f; f=files[i]; i++) {
-
+      for (let i = 0, f; (f = files[i]); i++) {
         let reader = new FileReader();
         fileNameList.push(f.name);
         reader.readAsText(f);
         reader.onload = () => {
-        tmp += reader.result;
-        isUploaded = true;
-        console.log(fileNameList);
-        console.log("finish")
-        }
+          tmp += reader.result;
+          isUploaded = true;
+          document.getElementById("fileName").innerHTML =
+            fileNameList.join(" , ") + "が選択されています";
+          console.log("finish");
+        };
       }
-    } ,
+    },
 
     submit() {
-
       if (isUploaded === false) {
         alert("ファイルが選択されていません");
-      }
-
-      else {
-        let idList = tmp.split("\n").filter((x, i, self) => self.indexOf(x) === i);
+      } else {
+        let idList = tmp
+          .split("\n")
+          .filter((x, i, self) => self.indexOf(x) === i);
         output = output + parse.parseCsv(idList, kdb) + "END:VCALENDAR";
-        var blob = new Blob([ output ], { "type" : "text/plain" });
+        var blob = new Blob([output], { type: "text/plain" });
         var name = "icaltest.ics";
 
-        if (window.navigator.msSaveBlob) { 
-          window.navigator.msSaveBlob(new Blob([output], { type: "text/plain" }), name);
-        } 
-        
-        else {
+        if (window.navigator.msSaveBlob) {
+          window.navigator.msSaveBlob(
+            new Blob([output], { type: "text/plain" }),
+            name
+          );
+        } else {
           var a = document.createElement("a");
-          a.href = URL.createObjectURL(new Blob([output], { type: "text/plain" }));
+          a.href = URL.createObjectURL(
+            new Blob([output], { type: "text/plain" })
+          );
           //a.target   = '_blank';
           a.download = name;
-          document.body.appendChild(a) //  FireFox specification
+          document.body.appendChild(a); //  FireFox specification
           a.click();
-          document.body.removeChild(a) //  FireFox specification
+          document.body.removeChild(a); //  FireFox specification
         }
 
         //Clear selected file
         let fileObject = document.getElementById("upload");
         fileObject.value = "";
+        document.getElementById("fileName").innerHTML =
+          "ファイルは選択されていません";
         isUploaded = false;
-
       }
-    } ,
+    }
   }
-}
-</script>    
+};
+</script>
 
 <style scoped>
-
 h1 {
   color: white;
   background-color: #5ecfd1;
@@ -120,7 +135,7 @@ h1 {
   align: center;
   background-color: white;
   flex-direction: column;
-  min-height: 100vh; 
+  min-height: 100vh;
   width: 90%;
   margin: 0 0 0 15%;
 }
@@ -141,8 +156,8 @@ h1 {
 label {
   position: center;
   width: 20%;
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.0rem;
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
   letter-spacing: 0.1%;
   font-weight: 400;
   color: #000;
@@ -155,13 +170,16 @@ label {
   cursor: pointer;
   outline: none;
   margin-top: 5%;
-  margin-left: 41%; 
-  margin-bottom: 5%;
-
+  margin-left: 41%;
+  margin-bottom: 3%;
 }
 
 input[type="file"] {
-    display: none;
+  display: none;
+}
+
+#fileName {
+  color: deeppink;
 }
 
 label:hover {
@@ -171,12 +189,11 @@ label:hover {
   transform: translateY(-7px);
 }
 
-
 .button {
   position: center;
   width: 20%;
   height: 2.5rem;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 0.9rem;
   letter-spacing: 0.1%;
   font-weight: 500;
@@ -188,9 +205,10 @@ label:hover {
   transition: all 0.3s ease 0s;
   cursor: pointer;
   outline: none;
-  margin-left: 41%; 
-  margin-bottom: 5%;
-  }
+  margin-top: 2.5%;
+  margin-left: 41%;
+  margin-bottom: 2%;
+}
 
 .button:hover {
   background-color: #5ecfd1;
@@ -198,5 +216,4 @@ label:hover {
   color: #fff;
   transform: translateY(-7px);
 }
-
 </style>

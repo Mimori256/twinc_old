@@ -401,7 +401,7 @@ function parseCsv(idList, kdb) {
   for (let i = 0; i < courseList.length; i++) {
     const name = courseList[i][0];
     const module = courseList[i][1];
-    const period = courseList[i][2];
+    const period = courseList[i][2].replace(",集中", "");
     const classroom = courseList[i][3];
     const description = courseList[i][4];
 
@@ -410,8 +410,8 @@ function parseCsv(idList, kdb) {
     if (isAvailableModule(module) != true || isWeekday(period) != true) {
       continue;
     } else {
-      let devidedModule = "";
-      let devidedPeriod;
+      let devidedModule = ""; //string
+      let devidedPeriod; //list
       let isABC;
 
       if (period.length > 4 || period.indexOf("・") != -1) {
@@ -419,6 +419,8 @@ function parseCsv(idList, kdb) {
       } else {
         devidedPeriod = [period];
       }
+
+      console.log(devidedPeriod);
 
       for (let j = 1; j < module.length; j++) {
         for (let l = 0; l < devidedPeriod.length; l++) {
