@@ -22,14 +22,14 @@ div {
   background-color: white;
   height: 100%;
   position: fixed;
-  width: 1%;
+  width: 0.1%;
   box-sizing: border-box;
-  padding-left: 0.5%;
+  padding-left: 0.1%;
 }
 
 .link-area {
   padding-top: 0%;
-  padding-right: 5%;
+  padding-right: 10%;
 }
 
 .sidebar-link {
@@ -45,7 +45,7 @@ div {
 
 @media screen and (max-width: 1100px) {
   .link-area {
-    padding-right: 3%;
+    padding-right: 10%;
   }
   .sidebar-link {
     font-size: 1.2rem;

@@ -139,12 +139,12 @@ h1 {
 .content {
   color: gray;
   display: flex;
-  align: center;
+  align-content: center;
   background-color: white;
   flex-direction: column;
   min-height: 90vh;
   width: 80%;
-  margin: 0 0 0 15%;
+  margin: 1% 0 0 15%;
 }
 
 .warn {

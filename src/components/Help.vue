@@ -91,10 +91,9 @@
   align-content: center;
   background-color: white;
   flex-direction: column;
-  height: 90vh;
+  height: 90%;
   width: 85%;
-  margin: 0 0 0 15%;
-  -webkit-overflow-scrolling: auto;
+  margin: 0 100px 0 13%;
   overflow-x: hidden;
   overflow-y: scroll;
 }
@@ -124,8 +123,12 @@ a {
 }
 @media screen and (max-width: 1100px) {
   .content {
-    overflow: scroll;
-    margin-bottom: auto;
+    font-size: 1rem;
+    height: 80%;
+    overflow-y: visible;
+    margin-top: auto;
+    margin-bottom: 0;
+    margin-left: 10%;
   }
 }
 </style>

@@ -77,4 +77,11 @@ a {
 .v-enter-active {
   transition: all 500ms;
 }
+
+@media screen and (max-width: 1100px) {
+  .content {
+    font-size: 1rem;
+    margin-right: 1%;
+  }
+}
 </style>
