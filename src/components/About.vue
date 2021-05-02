@@ -10,24 +10,17 @@
           プログラミング初心者なため、バグなどがある可能性があります。温かい目で見守ってください。
         </p>
         <p>
-          もし何か問題を発見した場合は、TwitterまたはGitHubで連絡していただけると、とてもありがたいです。
-        </p>
-        <h2>SNS一覧</h2>
-        <p>
-          <a
+          もし何か問題を発見した場合は、<a
             href="https://twitter.com/OkppGbFhZoJQRgL"
             target="_blank"
             rel="noopener"
-            ><img
-              src="@/assets/img/twitter.png"
-              alt="Twitter"
-              width="64"
-              height="64"
-              hspace="15"
-          /></a>
-          <a href="https://github.com/Mimori256" target="_blank" rel="noopener"
-            ><img src="@/assets/img/github.png" alt="GitHub" hspace="15"
-          /></a>
+            >Twitter</a
+          >または<a
+            href="https://github.com/Mimori256"
+            target="_blank"
+            rel="noopener"
+            >GitHub</a
+          >で連絡していただけると、とてもありがたいです。
         </p>
       </div>
     </div>
@@ -48,7 +41,7 @@
   flex-direction: column;
   height: 90vh;
   width: 85%;
-  margin: 0 5% 0 15%;
+  margin: 0 5% 0 13%;
   -webkit-overflow-scrolling: auto;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -80,8 +73,9 @@ a {
 
 @media screen and (max-width: 1100px) {
   .content {
+    height: 80%;
     font-size: 1rem;
-    margin-right: 1%;
+    margin-left: 13%;
   }
 }
 </style>

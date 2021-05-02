@@ -74,6 +74,7 @@
             ><p>このアプリが原因で遅刻しても責任は負いかねます</p></span
           >
         </span>
+        <span id="blank"></span>
       </div>
     </div>
   </transition>
@@ -93,7 +94,7 @@
   flex-direction: column;
   height: 90%;
   width: 85%;
-  margin: 0 100px 0 13%;
+  margin: 0 0 0 13%;
   overflow-x: hidden;
   overflow-y: scroll;
 }
@@ -121,14 +122,23 @@ a {
 .v-enter-active {
   transition: all 500ms;
 }
+
+#span {
+  padding-top: 0px;
+}
+
 @media screen and (max-width: 1100px) {
   .content {
     font-size: 1rem;
-    height: 80%;
+    height: 80vh;
     overflow-y: visible;
     margin-top: auto;
     margin-bottom: 0;
-    margin-left: 10%;
+    margin-left: 13%;
+  }
+
+  #blank {
+    margin-top: 50%;
   }
 }
 </style>
