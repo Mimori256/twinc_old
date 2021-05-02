@@ -174,7 +174,7 @@ function formedPeriod(period) {
   } else if (period.indexOf("・") != -1 && period.length == 6) {
     return (period[0] + period.slice(3) + period.slice(1)).split("・");
   } else {
-    return period;
+    return period.split();
   }
 }
 
