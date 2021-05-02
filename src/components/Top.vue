@@ -142,8 +142,8 @@ h1 {
   align: center;
   background-color: white;
   flex-direction: column;
-  min-height: 100vh;
-  width: 90%;
+  min-height: 90vh;
+  width: 80%;
   margin: 0 0 0 15%;
 }
 
@@ -162,7 +162,8 @@ h1 {
 
 label {
   position: center;
-  width: 20%;
+  white-space: nowrap;
+  width: 10rem;
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
   letter-spacing: 0.1%;
@@ -177,7 +178,7 @@ label {
   cursor: pointer;
   outline: none;
   margin-top: 5%;
-  margin-left: 41%;
+  margin-left: 40%;
   margin-bottom: 3%;
 }
 
@@ -186,6 +187,7 @@ input[type="file"] {
 }
 
 #fileName {
+  margin-right: 5%;
   color: deeppink;
 }
 
@@ -198,11 +200,13 @@ label:hover {
 
 .button {
   position: center;
-  width: 20%;
+  white-space: nowrap;
+  width: 10rem;
   height: 2.5rem;
   font-family: "Roboto", sans-serif;
   font-size: 0.9rem;
   letter-spacing: 0.1%;
+  line-height: 2.5rem;
   font-weight: 500;
   color: #000;
   background-color: #ddd;
@@ -213,7 +217,7 @@ label:hover {
   cursor: pointer;
   outline: none;
   margin-top: 2.5%;
-  margin-left: 41%;
+  margin-left: 40%;
   margin-bottom: 2%;
 }
 
@@ -234,5 +238,20 @@ label:hover {
 
 .v-enter-active {
   transition: all 500ms;
+}
+@media screen and (max-width: 1100px) {
+  .content {
+    margin-left: 15%;
+    overflow: scroll;
+  }
+  label {
+    margin: 10% auto;
+  }
+  .button {
+    margin: 10% auto;
+  }
+  #fileName {
+    margin: 0 auto;
+  }
 }
 </style>

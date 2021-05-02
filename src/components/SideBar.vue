@@ -42,4 +42,13 @@ div {
 .sidebar-link:hover {
   color: #5ecfd1;
 }
+
+@media screen and (max-width: 1100px) {
+  .link-area {
+    padding-right: 3%;
+  }
+  .sidebar-link {
+    font-size: 1.2rem;
+  }
+}
 </style>

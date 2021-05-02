@@ -7,14 +7,14 @@
           <p>
             TWINSにログインして、履修→カレンダーにしたいモジュールの下のダウンロードボタンから、CSVファイルを出力してください。
           </p>
-          <img src="@/assets/img/twinc1.png" width="80%" height="30%" />
+          <img src="@/assets/img/twinc1.png" width="80%" />
           <p>(ちなみに、このファイルはTwin:teの授業登録にも使えます)</p>
           <p>
-            次に、そのファイルをトップページで選択してから、ダウンロードボタンを押して、ファイルをダウンロードしてください。
+            次に、そのファイルをTwinCのトップページで選択してから、ダウンロードボタンを押して、ファイルをダウンロードしてください。
           </p>
           <img src="@/assets/img/download.png" width="80%" />
           <p>
-            ちなみに、ファイル名は(ダウンロード時刻) + twinc.icsとなっています
+            ファイル名は(ダウンロード時刻) + twinc.icsとなっています
           </p>
           <p>
             ここではGoogleカレンダーを例にします。Macのカレンダーなどに追加したい場合は自分で調べてください。
@@ -93,7 +93,7 @@
   flex-direction: column;
   height: 90vh;
   width: 85%;
-  margin: 0 5% 0 15%;
+  margin: 0 0 0 15%;
   -webkit-overflow-scrolling: auto;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -121,5 +121,11 @@ a {
 
 .v-enter-active {
   transition: all 500ms;
+}
+@media screen and (max-width: 1100px) {
+  .content {
+    overflow: scroll;
+    margin-bottom: auto;
+  }
 }
 </style>
