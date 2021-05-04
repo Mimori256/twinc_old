@@ -117,7 +117,7 @@ export default {
         let fileObject = document.getElementById("upload");
         fileObject.value = "";
         document.getElementById("fileName").innerHTML =
-          "ファイルは選択されていません";
+          "ファイルが選択されていません";
         isUploaded = false;
         location.reload();
       }
