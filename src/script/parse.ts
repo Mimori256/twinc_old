@@ -414,60 +414,60 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
 
     if (!isAvailableModule(module) || !isWeekday(period)) {
       continue;
-    } else {
-      let devidedModule: string = "";
-      let devidedPeriod: string[];
-      let isABC: boolean = false;
+    }
 
-      devidedPeriod =
-        period.length > 4 || period.indexOf("・") != -1
-          ? formedPeriod(period)
-          : [period];
+    let devidedModule: string = "";
+    let devidedPeriod: string[];
+    let isABC: boolean = false;
 
-      for (let j: number = 1; j < module.length; j++) {
-        for (let l: number = 0; l < devidedPeriod.length; l++) {
-          if (module.slice(1) === "ABC") {
-            devidedModule = module[0] + module[1];
-            icsEvent =
-              getSpan(devidedModule, devidedPeriod[l]) +
-              getABCRepeat(devidedModule, devidedPeriod[l]) +
-              getMisc(name, classroom, description);
-            output += eventBegin + icsEvent + eventEnd;
-            isABC = true;
-          } else {
-            devidedModule = module[0] + module[j];
-            icsEvent =
-              getSpan(devidedModule, devidedPeriod[l]) +
-              getRepeat(devidedModule, devidedPeriod[l]) +
-              getMisc(name, classroom, description);
-            output += eventBegin + icsEvent + eventEnd;
-            isABC = false;
-          }
-        }
+    devidedPeriod =
+      period.length > 4 || period.indexOf("・") != -1
+        ? formedPeriod(period)
+        : [period];
 
-        if (isABC === true) {
-          break;
+    for (let j: number = 1; j < module.length; j++) {
+      for (let l: number = 0; l < devidedPeriod.length; l++) {
+        if (module.slice(1) === "ABC") {
+          devidedModule = module[0] + module[1];
+          icsEvent =
+            getSpan(devidedModule, devidedPeriod[l]) +
+            getABCRepeat(devidedModule, devidedPeriod[l]) +
+            getMisc(name, classroom, description);
+          output += eventBegin + icsEvent + eventEnd;
+          isABC = true;
+        } else {
+          devidedModule = module[0] + module[j];
+          icsEvent =
+            getSpan(devidedModule, devidedPeriod[l]) +
+            getRepeat(devidedModule, devidedPeriod[l]) +
+            getMisc(name, classroom, description);
+          output += eventBegin + icsEvent + eventEnd;
+          isABC = false;
         }
       }
 
-      //reschedule
-      devidedPeriod =
-        period.length > 4 || period.indexOf("・") != -1
-          ? formedPeriod(period)
-          : [period];
+      if (isABC === true) {
+        break;
+      }
+    }
 
-      for (let j: number = 1; j < module.length; j++) {
-        for (let l: number = 0; l < devidedPeriod.length; l++) {
-          devidedModule = module[0] + module[j];
-          let rescheduleIndex: number = rescheduledClass.indexOf(
-            devidedModule + ":" + period[0]
-          );
-          if (rescheduleIndex !== -1) {
-            icsEvent =
-              addReschedule(rescheduleIndex, devidedPeriod[l]) +
-              getMisc(name, classroom, description);
-            output += eventBegin + icsEvent + eventEnd;
-          }
+    //reschedule
+    devidedPeriod =
+      period.length > 4 || period.indexOf("・") != -1
+        ? formedPeriod(period)
+        : [period];
+
+    for (let j: number = 1; j < module.length; j++) {
+      for (let l: number = 0; l < devidedPeriod.length; l++) {
+        devidedModule = module[0] + module[j];
+        let rescheduleIndex: number = rescheduledClass.indexOf(
+          devidedModule + ":" + period[0]
+        );
+        if (rescheduleIndex !== -1) {
+          icsEvent =
+            addReschedule(rescheduleIndex, devidedPeriod[l]) +
+            getMisc(name, classroom, description);
+          output += eventBegin + icsEvent + eventEnd;
         }
       }
     }
