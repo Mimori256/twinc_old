@@ -163,6 +163,13 @@ var isWeekday = function (period) {
     var weekdayList = ["月", "火", "水", "木", "金"];
     return weekdayList.includes(period.slice(0, 1)) ? true : false;
 };
+var formedModule = function (module) {
+    var removeList = [",集中", "夏季休業中", "春季休業中"];
+    for (var i = 0; i < removeList.length; i++) {
+        module = module.replace(removeList[i], "");
+    }
+    return module;
+};
 var formedPeriod = function (period) {
     if (period.indexOf("・") != -1 && period.length == 4) {
         period = period.replace("・", ",");
@@ -336,6 +343,7 @@ var parseCsv = function (idList, kdb) {
     var output = "";
     idList = idList.map(function (x) { return x.replace(/[\"]/g, ""); });
     idList = idList.map(function (x) { return x.replace(/\r/g, ""); });
+    console.log(idList);
     var eventBegin = "BEGIN:VEVENT\n";
     var eventEnd = "\nEND:VEVENT\n";
     var courseList = [];
@@ -343,12 +351,14 @@ var parseCsv = function (idList, kdb) {
     for (var i = 0; i < idList.length - 1; i++) {
         courseList.push(kdb[idList[i]]);
     }
+    console.log(courseList);
     for (var i = 0; i < courseList.length; i++) {
         var name_1 = courseList[i][0];
         var module = courseList[i][1];
-        var period = courseList[i][2].replace(",集中", "");
+        var period = formedModule(courseList[i][2]);
         var classroom = courseList[i][3];
         var description = courseList[i][4];
+        console.log(module);
         var icsEvent = "";
         if (!isAvailableModule(module) || !isWeekday(period)) {
             continue;

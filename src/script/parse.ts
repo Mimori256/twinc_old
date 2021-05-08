@@ -172,6 +172,16 @@ const isWeekday = (period: string): boolean => {
   return weekdayList.includes(period.slice(0, 1)) ? true : false;
 };
 
+const formedModule = (module: string): string => {
+  const removeList: string[] = [",集中", "夏季休業中", "春季休業中"];
+
+  for (let i: number = 0; i < removeList.length; i++) {
+    module = module.replace(removeList[i], "");
+  }
+
+  return module;
+};
+
 const formedPeriod = (period: string): string[] => {
   if (period.indexOf("・") != -1 && period.length == 4) {
     period = period.replace("・", ",");
@@ -396,7 +406,7 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
   for (let i: number = 0; i < courseList.length; i++) {
     const name: string = courseList[i][0];
     const module: string = courseList[i][1];
-    const period: string = courseList[i][2].replace(",集中", "");
+    const period: string = formedModule(courseList[i][2]);
     const classroom: string = courseList[i][3];
     const description: string = courseList[i][4];
 
