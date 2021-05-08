@@ -68,7 +68,9 @@ var classBeginPeriod = [
     "121500",
     "134500",
     "151500",
-    "164500"
+    "164500",
+    "182000",
+    "194500"
 ];
 var classEndPeriod = [
     "0",
@@ -77,7 +79,8 @@ var classEndPeriod = [
     "133000",
     "150000",
     "163000",
-    "180000"
+    "180000",
+    "210000"
 ];
 var springAHolidays = [
     "20210429",
@@ -89,7 +92,7 @@ var springAHolidays = [
 var springBHolidays = [];
 var springCHolidays = ["202]0722", "20210723"];
 var fallAHolidays = [
-    "202]1103",
+    "20211103",
     "20211105",
     "20211108",
     "20211109"
@@ -162,6 +165,11 @@ var isAvailableModule = function (module) {
 var isWeekday = function (period) {
     var weekdayList = ["月", "火", "水", "木", "金"];
     return weekdayList.includes(period.slice(0, 1)) ? true : false;
+};
+var isMultipleTerms = function (module) {
+    return module.indexOf("春") != -1 && module.indexOf("秋") != -1
+        ? true
+        : false;
 };
 var formedModule = function (module) {
     var removeList = [",集中", "夏季休業中", "春季休業中"];
@@ -343,7 +351,6 @@ var parseCsv = function (idList, kdb) {
     var output = "";
     idList = idList.map(function (x) { return x.replace(/[\"]/g, ""); });
     idList = idList.map(function (x) { return x.replace(/\r/g, ""); });
-    console.log(idList);
     var eventBegin = "BEGIN:VEVENT\n";
     var eventEnd = "\nEND:VEVENT\n";
     var courseList = [];
@@ -351,30 +358,38 @@ var parseCsv = function (idList, kdb) {
     for (var i = 0; i < idList.length - 1; i++) {
         courseList.push(kdb[idList[i]]);
     }
-    console.log(courseList);
     for (var i = 0; i < courseList.length; i++) {
         var name_1 = courseList[i][0];
         var module = courseList[i][1];
         var period = formedModule(courseList[i][2]);
         var classroom = courseList[i][3];
         var description = courseList[i][4];
-        console.log(module);
         var icsEvent = "";
         if (!isAvailableModule(module) || !isWeekday(period)) {
             continue;
         }
+        var devidedModule = "";
+        var devidedPeriod = void 0;
+        var isABC = false;
+        var moduleList = void 0;
+        if (isMultipleTerms(module) === true) {
+            var devidePositioin = module.indexOf("秋");
+            moduleList = (module.slice(0, devidePositioin) +
+                "," +
+                module.slice(devidePositioin)).split(",");
+        }
         else {
-            var devidedModule = "";
-            var devidedPeriod = void 0;
-            var isABC = false;
-            devidedPeriod =
-                period.length > 4 || period.indexOf("・") != -1
-                    ? formedPeriod(period)
-                    : [period];
-            for (var j = 1; j < module.length; j++) {
+            moduleList = [module];
+        }
+        devidedPeriod =
+            period.length > 4 || period.indexOf("・") != -1
+                ? formedPeriod(period)
+                : [period];
+        for (var j = 0; j < moduleList.length; j++) {
+            for (var k = 1; k < moduleList[j].length; k++) {
                 for (var l = 0; l < devidedPeriod.length; l++) {
-                    if (module.slice(1) === "ABC") {
-                        devidedModule = module[0] + module[1];
+                    if (moduleList[j].slice(1) === "ABC") {
+                        devidedModule = moduleList[j][0] + moduleList[j][1];
                         icsEvent =
                             getSpan(devidedModule, devidedPeriod[l]) +
                                 getABCRepeat(devidedModule, devidedPeriod[l]) +
@@ -383,7 +398,7 @@ var parseCsv = function (idList, kdb) {
                         isABC = true;
                     }
                     else {
-                        devidedModule = module[0] + module[j];
+                        devidedModule = moduleList[j][0] + moduleList[j][k];
                         icsEvent =
                             getSpan(devidedModule, devidedPeriod[l]) +
                                 getRepeat(devidedModule, devidedPeriod[l]) +
@@ -396,14 +411,16 @@ var parseCsv = function (idList, kdb) {
                     break;
                 }
             }
-            //reschedule
-            devidedPeriod =
-                period.length > 4 || period.indexOf("・") != -1
-                    ? formedPeriod(period)
-                    : [period];
-            for (var j = 1; j < module.length; j++) {
+        }
+        //reschedule
+        devidedPeriod =
+            period.length > 4 || period.indexOf("・") != -1
+                ? formedPeriod(period)
+                : [period];
+        for (var j = 0; j < moduleList.length; j++) {
+            for (var k = 1; k < moduleList[j].length; k++) {
                 for (var l = 0; l < devidedPeriod.length; l++) {
-                    devidedModule = module[0] + module[j];
+                    devidedModule = module[0] + module[k];
                     var rescheduleIndex = rescheduledClass.indexOf(devidedModule + ":" + period[0]);
                     if (rescheduleIndex !== -1) {
                         icsEvent =

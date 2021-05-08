@@ -69,7 +69,9 @@ const classBeginPeriod: string[] = [
   "121500",
   "134500",
   "151500",
-  "164500"
+  "164500",
+  "182000",
+  "194500"
 ];
 const classEndPeriod: string[] = [
   "0",
@@ -78,7 +80,8 @@ const classEndPeriod: string[] = [
   "133000",
   "150000",
   "163000",
-  "180000"
+  "180000",
+  "210000"
 ];
 
 const springAHolidays: string[] = [
@@ -91,7 +94,7 @@ const springAHolidays: string[] = [
 const springBHolidays: string[] = [];
 const springCHolidays: string[] = ["202]0722", "20210723"];
 const fallAHolidays: string[] = [
-  "202]1103",
+  "20211103",
   "20211105",
   "20211108",
   "20211109"
@@ -170,6 +173,12 @@ const isAvailableModule = (module: string): boolean => {
 const isWeekday = (period: string): boolean => {
   const weekdayList: string[] = ["月", "火", "水", "木", "金"];
   return weekdayList.includes(period.slice(0, 1)) ? true : false;
+};
+
+const isMultipleTerms = (module: string): boolean => {
+  return module.indexOf("春") != -1 && module.indexOf("秋") != -1
+    ? true
+    : false;
 };
 
 const formedModule = (module: string): string => {
@@ -420,34 +429,48 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
     let devidedPeriod: string[];
     let isABC: boolean = false;
 
+    let moduleList: string[];
+    if (isMultipleTerms(module) === true) {
+      let devidePositioin: number = module.indexOf("秋");
+      moduleList = (
+        module.slice(0, devidePositioin) +
+        "," +
+        module.slice(devidePositioin)
+      ).split(",");
+    } else {
+      moduleList = [module];
+    }
+
     devidedPeriod =
       period.length > 4 || period.indexOf("・") != -1
         ? formedPeriod(period)
         : [period];
 
-    for (let j: number = 1; j < module.length; j++) {
-      for (let l: number = 0; l < devidedPeriod.length; l++) {
-        if (module.slice(1) === "ABC") {
-          devidedModule = module[0] + module[1];
-          icsEvent =
-            getSpan(devidedModule, devidedPeriod[l]) +
-            getABCRepeat(devidedModule, devidedPeriod[l]) +
-            getMisc(name, classroom, description);
-          output += eventBegin + icsEvent + eventEnd;
-          isABC = true;
-        } else {
-          devidedModule = module[0] + module[j];
-          icsEvent =
-            getSpan(devidedModule, devidedPeriod[l]) +
-            getRepeat(devidedModule, devidedPeriod[l]) +
-            getMisc(name, classroom, description);
-          output += eventBegin + icsEvent + eventEnd;
-          isABC = false;
+    for (let j = 0; j < moduleList.length; j++) {
+      for (let k: number = 1; k < moduleList[j].length; k++) {
+        for (let l: number = 0; l < devidedPeriod.length; l++) {
+          if (moduleList[j].slice(1) === "ABC") {
+            devidedModule = moduleList[j][0] + moduleList[j][1];
+            icsEvent =
+              getSpan(devidedModule, devidedPeriod[l]) +
+              getABCRepeat(devidedModule, devidedPeriod[l]) +
+              getMisc(name, classroom, description);
+            output += eventBegin + icsEvent + eventEnd;
+            isABC = true;
+          } else {
+            devidedModule = moduleList[j][0] + moduleList[j][k];
+            icsEvent =
+              getSpan(devidedModule, devidedPeriod[l]) +
+              getRepeat(devidedModule, devidedPeriod[l]) +
+              getMisc(name, classroom, description);
+            output += eventBegin + icsEvent + eventEnd;
+            isABC = false;
+          }
         }
-      }
 
-      if (isABC === true) {
-        break;
+        if (isABC === true) {
+          break;
+        }
       }
     }
 
@@ -457,17 +480,19 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
         ? formedPeriod(period)
         : [period];
 
-    for (let j: number = 1; j < module.length; j++) {
-      for (let l: number = 0; l < devidedPeriod.length; l++) {
-        devidedModule = module[0] + module[j];
-        let rescheduleIndex: number = rescheduledClass.indexOf(
-          devidedModule + ":" + period[0]
-        );
-        if (rescheduleIndex !== -1) {
-          icsEvent =
-            addReschedule(rescheduleIndex, devidedPeriod[l]) +
-            getMisc(name, classroom, description);
-          output += eventBegin + icsEvent + eventEnd;
+    for (let j: number = 0; j < moduleList.length; j++) {
+      for (let k: number = 1; k < moduleList[j].length; k++) {
+        for (let l: number = 0; l < devidedPeriod.length; l++) {
+          devidedModule = module[0] + module[k];
+          let rescheduleIndex: number = rescheduledClass.indexOf(
+            devidedModule + ":" + period[0]
+          );
+          if (rescheduleIndex !== -1) {
+            icsEvent =
+              addReschedule(rescheduleIndex, devidedPeriod[l]) +
+              getMisc(name, classroom, description);
+            output += eventBegin + icsEvent + eventEnd;
+          }
         }
       }
     }
