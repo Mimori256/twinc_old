@@ -182,13 +182,21 @@ const isMultipleTerms = (module: string): boolean => {
 };
 
 const formedModule = (module: string): string => {
-  const removeList: string[] = [",集中", "夏季休業中", "春季休業中"];
+  const removeList: string[] = [" 夏季休業中", " 春季休業中"];
 
   for (let i: number = 0; i < removeList.length; i++) {
     module = module.replace(removeList[i], "");
   }
 
   return module;
+};
+
+const removeSpecialPeriod = (period: string): string => {
+  const removeList: string[] = [" 集中", ",集中", " 随時", " 応談"];
+  for (let i: number = 0; i < removeList.length; i++) {
+    period = period.replace(removeList[i], "");
+  }
+  return period;
 };
 
 const formedPeriod = (period: string): string[] => {
@@ -414,8 +422,8 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
 
   for (let i: number = 0; i < courseList.length; i++) {
     const name: string = courseList[i][0];
-    const module: string = courseList[i][1];
-    const period: string = formedModule(courseList[i][2]);
+    const module: string = formedModule(courseList[i][1]);
+    const period: string = removeSpecialPeriod(courseList[i][2]);
     const classroom: string = courseList[i][3];
     const description: string = courseList[i][4];
 
