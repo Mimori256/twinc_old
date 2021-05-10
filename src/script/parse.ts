@@ -92,7 +92,7 @@ const springAHolidays: string[] = [
   "20210507"
 ];
 const springBHolidays: string[] = [];
-const springCHolidays: string[] = ["202]0722", "20210723"];
+const springCHolidays: string[] = ["20210722", "20210723"];
 const fallAHolidays: string[] = [
   "20211103",
   "20211105",
@@ -100,7 +100,7 @@ const fallAHolidays: string[] = [
   "20211109"
 ];
 const fallBHolidays: string[] = [
-  "202]1123",
+  "20211123",
   "20211125",
   "20211129",
   "20211130"

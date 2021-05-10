@@ -90,9 +90,9 @@ var springAHolidays = [
   "20210507"
 ];
 var springBHolidays = [];
-var springCHolidays = ["202]0722", "20210723"];
+var springCHolidays = ["20210722", "20210723"];
 var fallAHolidays = ["20211103", "20211105", "20211108", "20211109"];
-var fallBHolidays = ["202]1123", "20211125", "20211129", "20211130"];
+var fallBHolidays = ["20211123", "20211125", "20211129", "20211130"];
 var fallCHolidays = [
   "20220110",
   "20220113",
