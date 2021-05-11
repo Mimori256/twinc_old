@@ -31,7 +31,7 @@
           <p>試験期間、試験日の予定は登録されないことに注意してください</p>
           <p>モジュールの期間は学年暦に基づいています</p>
           <p>祝日に授業は登録されません</p>
-          <p>大学院生向けの7~8時限の授業には現在対応していません</p>
+          <p>今年度開講されない授業は登録することができません</p>
           <p>
             学年暦に表示されている振替には対応していますが、それ以外の振替には対応していません
           </p>
@@ -53,8 +53,7 @@ import kdb from "../assets/kdb.json";
 import parse from "../script/parse.js";
 
 var tmp = "";
-var output =
-  "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinCal 2.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
+var output = "";
 var isUploaded = false;
 
 export default {

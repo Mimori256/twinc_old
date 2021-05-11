@@ -4,42 +4,48 @@ const beginSpringA: { [key: string]: string } = {
   火: "20210413",
   水: "20210414",
   木: "20210408",
-  金: "20210409"
+  金: "20210409",
+  土: "20210410"
 };
 const beginSpringB: { [key: string]: string } = {
   月: "20210524",
   火: "20210525",
   水: "20210526",
   木: "20210520",
-  金: "20210521"
+  金: "20210521",
+  土: "20210522"
 };
 const beginSpringC: { [key: string]: string } = {
   月: "20210705",
   火: "20210706",
   水: "20210707",
   木: "20210701",
-  金: "20210702"
+  金: "20210702",
+  土: "20210703"
 };
 const beginFallA: { [key: string]: string } = {
   月: "20211004",
   火: "20211005",
   水: "20211006",
   木: "20211007",
-  金: "20211001"
+  金: "20211001",
+  土: "20211002"
 };
 const beginFallB: { [key: string]: string } = {
   月: "20211115",
   火: "20211116",
   水: "20211117",
   木: "20211111",
-  金: "20211112"
+  金: "20211112",
+  土: "20211113"
 };
 const beginFallC: { [key: string]: string } = {
   月: "20220124",
   火: "20220111",
   水: "20220112",
   木: "20220106",
-  金: "20210107"
+  金: "20220107",
+  土: "20220108"
 };
 
 const springEndDate: { [key: string]: string } = {
@@ -58,7 +64,8 @@ const engWeekday: { [key: string]: string } = {
   火: "TU",
   水: "WE",
   木: "TH",
-  金: "FR"
+  金: "FR",
+  土: "SA"
 };
 
 //the head element(0) is a dummy
@@ -170,8 +177,8 @@ const isAvailableModule = (module: string): boolean => {
     : true;
 };
 
-const isWeekday = (period: string): boolean => {
-  const weekdayList: string[] = ["月", "火", "水", "木", "金"];
+const isAvaibaleDay = (period: string): boolean => {
+  const weekdayList: string[] = ["月", "火", "水", "木", "金", "土"];
   return weekdayList.includes(period.slice(0, 1)) ? true : false;
 };
 
@@ -406,7 +413,8 @@ const removeABCHolidays = (module: string, period: string): string => {
 };
 
 const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
-  let output: string = "";
+  let output: string =
+    "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinC 1.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
 
   idList = idList.map(x => x.replace(/[\"]/g, ""));
   idList = idList.map(x => x.replace(/\r/g, ""));
@@ -429,7 +437,7 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
 
     let icsEvent: string = "";
 
-    if (!isAvailableModule(module) || !isWeekday(period)) {
+    if (!isAvailableModule(module) || !isAvaibaleDay(period)) {
       continue;
     }
 

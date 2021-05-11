@@ -1,7 +1,7 @@
 {
   "name": "twinc",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "Convert your TWINS data into ics file",
   "author": "Mimori256",
   "private": true,
   "scripts": {
