@@ -49,7 +49,7 @@
           </p>
           <img src="@/assets/img/twinc5.png" width="80%" />
           <h2>注意</h2>
-          <p>各モジュールの試験期間は、授業予定が登録されません</p>
+          <p>各モジュールの試験期間と試験日には、授業予定が登録されません</p>
           <p>
             モジュールの期間は、<a
               href="https://www.tsukuba.ac.jp/campuslife/calendar-school/pdf/2021-grad-tsukuba.pdf"
