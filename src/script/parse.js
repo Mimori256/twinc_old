@@ -87,6 +87,7 @@ var classEndPeriod = [
     "150000",
     "163000",
     "180000",
+    "193500",
     "210000"
 ];
 var springAHolidays = [
@@ -145,7 +146,7 @@ var fallABCHolidays = [
     "20220204"
 ];
 //Date:Module:Class schedule of the day
-var rescheduleDate = [
+var rescheduledDateList = [
     "20210507",
     "20210722",
     "20211109",
@@ -153,7 +154,7 @@ var rescheduleDate = [
     "20220113",
     "20220118"
 ];
-var rescheduledClass = [
+var rescheduledClassList = [
     "春A:水",
     "春C:金",
     "秋B:水",
@@ -162,7 +163,7 @@ var rescheduledClass = [
     "秋C:月"
 ];
 var addZero = function (str) {
-    return str.length === 1 && str != "T" ? "0" + str : str;
+    return str.length === 1 && str !== "T" ? "0" + str : str;
 };
 var isAvailableModule = function (module) {
     return module.indexOf("春") == -1 && module.indexOf("秋") == -1
@@ -170,14 +171,16 @@ var isAvailableModule = function (module) {
         : true;
 };
 var isAvaibaleDay = function (period) {
-    var weekdayList = ["月", "火", "水", "木", "金", "土"];
-    return weekdayList.includes(period.slice(0, 1)) ? true : false;
+    //There's no Sunday class in the year
+    var availableDayList = ["月", "火", "水", "木", "金", "土"];
+    return availableDayList.includes(period.slice(0, 1)) ? true : false;
 };
 var isMultipleTerms = function (module) {
-    return module.indexOf("春") != -1 && module.indexOf("秋") != -1
+    return module.indexOf("春") !== -1 && module.indexOf("秋") !== -1
         ? true
         : false;
 };
+//Remove special module class
 var formedModule = function (module) {
     var removeList = [" 夏季休業中", " 春季休業中"];
     for (var i = 0; i < removeList.length; i++) {
@@ -250,7 +253,7 @@ var getSpan = function (module, period) {
         "\n");
 };
 var addReschedule = function (index, period) {
-    var beginDate = rescheduleDate[index];
+    var beginDate = rescheduledDateList[index];
     var DTSTART = "DTSTART;TZID=Asia/Tokyo:";
     var DTEND = "DTEND;TZID=Asia/Tokyo:";
     //Get the start and end time of the course
@@ -278,7 +281,7 @@ var getRepeat = function (module, period) {
     exdate = removeHolidays(module, period);
     return rrule + exdate;
 };
-//For ABC module classes
+//For ABC module class
 var getABCRepeat = function (module, period) {
     var rrule = "RRULE:FREQ=WEEKLY;UNTIL=";
     var exdate;
@@ -288,7 +291,7 @@ var getABCRepeat = function (module, period) {
     return rrule + exdate;
 };
 var getMisc = function (name, classroom, desc) {
-    //Get the current time
+    //Create a timestamp for this year
     var year = "2021";
     var month = "4";
     var date = "8";
@@ -368,6 +371,7 @@ var parseCsv = function (idList, kdb) {
     var eventBegin = "BEGIN:VEVENT\n";
     var eventEnd = "\nEND:VEVENT\n";
     var courseList = [];
+    var isValid = false;
     //Search courses
     for (var i = 0; i < idList.length - 1; i++) {
         courseList.push(kdb[idList[i]]);
@@ -382,7 +386,9 @@ var parseCsv = function (idList, kdb) {
         if (!isAvailableModule(module) || !isAvaibaleDay(period)) {
             continue;
         }
+        isValid = true;
         var devidedModule = "";
+        //string list
         var devidedPeriod = void 0;
         var isABC = false;
         var moduleList = void 0;
@@ -399,8 +405,11 @@ var parseCsv = function (idList, kdb) {
             period.length > 4 || period.indexOf("・") != -1
                 ? formedPeriod(period)
                 : [period];
+        //Semester loop
         for (var j = 0; j < moduleList.length; j++) {
+            //Module loop
             for (var k = 1; k < moduleList[j].length; k++) {
+                //Period loop
                 for (var l = 0; l < devidedPeriod.length; l++) {
                     if (moduleList[j].slice(1) === "ABC") {
                         devidedModule = moduleList[j][0] + moduleList[j][1];
@@ -431,11 +440,14 @@ var parseCsv = function (idList, kdb) {
             period.length > 4 || period.indexOf("・") != -1
                 ? formedPeriod(period)
                 : [period];
+        //Semester loop
         for (var j = 0; j < moduleList.length; j++) {
+            //Module loop
             for (var k = 1; k < moduleList[j].length; k++) {
+                //Period loop
                 for (var l = 0; l < devidedPeriod.length; l++) {
                     devidedModule = module[0] + module[k];
-                    var rescheduleIndex = rescheduledClass.indexOf(devidedModule + ":" + period[0]);
+                    var rescheduleIndex = rescheduledClassList.indexOf(devidedModule + ":" + period[0]);
                     if (rescheduleIndex !== -1) {
                         icsEvent =
                             addReschedule(rescheduleIndex, devidedPeriod[l]) +
@@ -446,6 +458,6 @@ var parseCsv = function (idList, kdb) {
             }
         }
     }
-    return output;
+    return [output, isValid];
 };
 exports["default"] = { parseCsv: parseCsv };

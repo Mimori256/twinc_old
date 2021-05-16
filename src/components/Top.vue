@@ -52,9 +52,8 @@
 import kdb from "../assets/kdb.json";
 import parse from "../script/parse.js";
 
-var tmp = "";
-var output = "";
-var isUploaded = false;
+let tmp = "";
+let isUploaded = false;
 
 export default {
   name: "Top",
@@ -88,7 +87,13 @@ export default {
         let idList = tmp
           .split("\n")
           .filter((x, i, self) => self.indexOf(x) === i);
-        output = output + parse.parseCsv(idList, kdb) + "END:VCALENDAR";
+        let [output, isValid] = parse.parseCsv(idList, kdb);
+        output += "END:VCALENDAR";
+
+        if (!isValid) {
+          alert("カレンダーに登録できる授業が存在しません");
+          return 0;
+        }
         let blob = new Blob([output], { type: "text/plain" });
         let now = new Date();
         let hour = ("0" + now.getHours()).slice(-2);

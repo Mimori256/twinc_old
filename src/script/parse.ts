@@ -88,6 +88,7 @@ const classEndPeriod: string[] = [
   "150000",
   "163000",
   "180000",
+  "193500",
   "210000"
 ];
 
@@ -149,7 +150,7 @@ const fallABCHolidays: string[] = [
 ];
 
 //Date:Module:Class schedule of the day
-const rescheduleDate: string[] = [
+const rescheduledDateList: string[] = [
   "20210507",
   "20210722",
   "20211109",
@@ -158,7 +159,7 @@ const rescheduleDate: string[] = [
   "20220118"
 ];
 
-const rescheduledClass: string[] = [
+const rescheduledClassList: string[] = [
   "春A:水",
   "春C:金",
   "秋B:水",
@@ -168,7 +169,7 @@ const rescheduledClass: string[] = [
 ];
 
 const addZero = (str: string): string => {
-  return str.length === 1 && str != "T" ? "0" + str : str;
+  return str.length === 1 && str !== "T" ? "0" + str : str;
 };
 
 const isAvailableModule = (module: string): boolean => {
@@ -178,16 +179,18 @@ const isAvailableModule = (module: string): boolean => {
 };
 
 const isAvaibaleDay = (period: string): boolean => {
-  const weekdayList: string[] = ["月", "火", "水", "木", "金", "土"];
-  return weekdayList.includes(period.slice(0, 1)) ? true : false;
+  //There's no Sunday class in the year
+  const availableDayList: string[] = ["月", "火", "水", "木", "金", "土"];
+  return availableDayList.includes(period.slice(0, 1)) ? true : false;
 };
 
 const isMultipleTerms = (module: string): boolean => {
-  return module.indexOf("春") != -1 && module.indexOf("秋") != -1
+  return module.indexOf("春") !== -1 && module.indexOf("秋") !== -1
     ? true
     : false;
 };
 
+//Remove special module class
 const formedModule = (module: string): string => {
   const removeList: string[] = [" 夏季休業中", " 春季休業中"];
 
@@ -272,7 +275,7 @@ const getSpan = (module: string, period: string): string => {
 };
 
 const addReschedule = (index: number, period: string): string => {
-  let beginDate: string = rescheduleDate[index];
+  let beginDate: string = rescheduledDateList[index];
   const DTSTART: string = "DTSTART;TZID=Asia/Tokyo:";
   const DTEND: string = "DTEND;TZID=Asia/Tokyo:";
 
@@ -308,7 +311,7 @@ const getRepeat = (module: string, period: string): string => {
   return rrule + exdate;
 };
 
-//For ABC module classes
+//For ABC module class
 const getABCRepeat = (module: string, period: string): string => {
   let rrule: string = "RRULE:FREQ=WEEKLY;UNTIL=";
   let exdate: string;
@@ -321,7 +324,7 @@ const getABCRepeat = (module: string, period: string): string => {
 };
 
 const getMisc = (name: string, classroom: string, desc: string): string => {
-  //Get the current time
+  //Create a timestamp for this year
   const year: string = "2021";
   const month: string = "4";
   const date: string = "8";
@@ -412,7 +415,10 @@ const removeABCHolidays = (module: string, period: string): string => {
   return exdate + "\n";
 };
 
-const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
+const parseCsv = (
+  idList: string[],
+  kdb: { [key: string]: string }
+): [string, boolean] => {
   let output: string =
     "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinC 1.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
 
@@ -422,6 +428,7 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
   const eventBegin: string = "BEGIN:VEVENT\n";
   const eventEnd: string = "\nEND:VEVENT\n";
   let courseList: string[] = [];
+  let isValid: boolean = false;
 
   //Search courses
   for (let i: number = 0; i < idList.length - 1; i++) {
@@ -441,7 +448,10 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
       continue;
     }
 
+    isValid = true;
+
     let devidedModule: string = "";
+    //string list
     let devidedPeriod: string[];
     let isABC: boolean = false;
 
@@ -462,8 +472,11 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
         ? formedPeriod(period)
         : [period];
 
+    //Semester loop
     for (let j = 0; j < moduleList.length; j++) {
+      //Module loop
       for (let k: number = 1; k < moduleList[j].length; k++) {
+        //Period loop
         for (let l: number = 0; l < devidedPeriod.length; l++) {
           if (moduleList[j].slice(1) === "ABC") {
             devidedModule = moduleList[j][0] + moduleList[j][1];
@@ -496,11 +509,14 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
         ? formedPeriod(period)
         : [period];
 
+    //Semester loop
     for (let j: number = 0; j < moduleList.length; j++) {
+      //Module loop
       for (let k: number = 1; k < moduleList[j].length; k++) {
+        //Period loop
         for (let l: number = 0; l < devidedPeriod.length; l++) {
           devidedModule = module[0] + module[k];
-          let rescheduleIndex: number = rescheduledClass.indexOf(
+          let rescheduleIndex: number = rescheduledClassList.indexOf(
             devidedModule + ":" + period[0]
           );
           if (rescheduleIndex !== -1) {
@@ -513,7 +529,7 @@ const parseCsv = (idList: string[], kdb: { [key: string]: string }): string => {
       }
     }
   }
-  return output;
+  return [output, isValid];
 };
 
 export default { parseCsv };
