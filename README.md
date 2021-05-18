@@ -3,3 +3,6 @@ TWINSからダウンロードしたCSVをics形式に変換して、Googleカレ
 
 ## 使い方
 TwinCの[Helpページ](https://mimori256.github.io/twinc/#/Help)を参照してください。
+
+### コントリビューション 
+IssueおよびPRはいつでも受け付けています。
