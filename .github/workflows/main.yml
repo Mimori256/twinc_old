@@ -1,4 +1,4 @@
-name: CSV and JSON scheduled update
+name: JSON scheduled update
 
 on:
   schedule:
