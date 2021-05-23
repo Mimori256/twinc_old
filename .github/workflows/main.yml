@@ -1,4 +1,4 @@
-name: CSV and JSON scheduled update
+name: JSON scheduled update
 
 on:
   schedule:
@@ -16,8 +16,7 @@ jobs:
       - name: update JSON file
         run: |
           cd src/assets
-          rm kdb.json
-          wget -o kdb.json https://raw.githubusercontent.com/Mimori256/kdb-parse/main/kdb.json
+          curl https://raw.githubusercontent.com/Mimori256/kdb-parse/main/kdb.json > kdb.json
       - name: Push and Commit
         run: |
           git add .
