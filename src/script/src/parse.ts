@@ -1,4 +1,8 @@
+//Import
+import parsePeriod from "parsePeriod";
+
 //Global variables
+
 const beginSpringA: { [key: string]: string } = {
   月: "20210412",
   火: "20210413",
@@ -188,6 +192,10 @@ const isMultipleTerms = (module: string): boolean => {
   return module.indexOf("春") !== -1 && module.indexOf("秋") !== -1
     ? true
     : false;
+};
+
+const isMutltipleModules = (module: string): boolean => {
+  return module.indexOf(" ") !== -1 ? true : false;
 };
 
 //Remove special module class
@@ -467,10 +475,7 @@ const parseCsv = (
       moduleList = [module];
     }
 
-    devidedPeriod =
-      period.length > 4 || period.indexOf("・") != -1
-        ? formedPeriod(period)
-        : [period];
+    devidedPeriod = parsePeriod(period);
 
     //Semester loop
     for (let j = 0; j < moduleList.length; j++) {
@@ -504,10 +509,7 @@ const parseCsv = (
     }
 
     //reschedule
-    devidedPeriod =
-      period.length > 4 || period.indexOf("・") != -1
-        ? formedPeriod(period)
-        : [period];
+    devidedPeriod = parsePeriod(period);
 
     //Semester loop
     for (let j: number = 0; j < moduleList.length; j++) {

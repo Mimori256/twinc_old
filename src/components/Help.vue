@@ -5,7 +5,12 @@
         <span class="intruction" align="center">
           <p>以下、パソコンでの使用を想定しています</p>
           <p>
-          <a href="https://twins.tsukuba.ac.jp/campusweb/campussmart.do" target="_blank" rel="nooperner">TWINS</a>
+            <a
+              href="https://twins.tsukuba.ac.jp/campusweb/campussmart.do"
+              target="_blank"
+              rel="nooperner"
+              >TWINS</a
+            >
             にログインして、履修→カレンダーにしたいモジュールの下のダウンロードボタンから、CSVファイルを出力してください。
           </p>
           <img src="@/assets/img/twinc1.png" width="80%" />
@@ -60,6 +65,7 @@
           </p>
           <p>祝日や学年暦に書かれている休日も、授業予定が登録されません</p>
           <p>今年度開講されない授業については登録することができません</p>
+          <p>通年授業の登録には対応していません</p>
           <p>
             また、学年暦に書かれている振替に対応して、授業予定は登録されています
           </p>
