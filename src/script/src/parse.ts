@@ -1,5 +1,3 @@
-//Import
-
 //Global variables
 
 const beginSpringA: { [key: string]: string } = {
@@ -239,6 +237,7 @@ const getDayIndex = (period: string): number[] => {
       dayIndexList.push(i);
     }
   }
+  dayIndexList.pop(); 
   return dayIndexList;
 };
 
@@ -257,10 +256,51 @@ const formedPeriod = (period: string): string[] => {
 
 const formedPeriod = (period: string): string => {
   //Use ":" as a separator
+  period = period.replace("・", "");
+  let listedPeriod = Array.from(period);
   const dayCount: number = getDayCount(period);
   if (dayCount === 1) return period;
   const dayIndex: number[] = getDayIndex(period);
+  const numInfo: string = period.slice((dayIndex[dayIndex.length -1 ] +1));
+
+  for (let i: number = 0; i< listedPeriod.length; i++) {
+    if(weekdayList.includes(listedPeriod[i])) {
+      listedPeriod[i] = listedPeriod[i] + numInfo;
+    }
+  }
+  return listedPeriod.join(":");
 };
+
+const createClassList = (moduleTmp: string[], periodTmp: string[]): string[][] => {
+
+  let moduleList: string[] = [];
+  let periodList: string[] = [];
+  for (let i: number = 0; i < periodTmp.length; i++) {
+      try {
+        if (moduleTmp[i] !== "" && periodTmp[i] !== "") {
+          moduleList.push(moduleTmp[i]);
+          periodList.push(periodTmp[i]);
+      }
+    }
+      //Index error
+      catch(error) {
+        moduleList.push(moduleTmp[moduleTmp.length -1])*
+        periodList.push(periodTmp[i]);
+      }
+    }
+
+    let classList: string[][] = [];
+
+    periodList.map(x => formedPeriod(x));
+
+    for (let i: number = 0; i < length; i++) {
+      classList.push([moduleList[i], periodList[i]]);
+    }
+
+    return classList;
+
+}
+
 
 const getSpan = (module: string, period: string): string => {
   let beginDate: string = "";
@@ -498,44 +538,31 @@ const parseCsv = (
 
     let isABC: boolean = false;
 
-    let moduleTmp: string[] = module.split(" ").map(removeSpecialModule);
-    let periodTmp: string[] = period.split(" ").map(removeSpecialPeriod);
-    let moduleList: string[] = [];
-    let periodList: string[] = [];
-    let length: number = moduleTmp.length;
+    const moduleTmp: string[] = module.split(" ").map(removeSpecialModule);
+    const periodTmp: string[] = period.split(" ").map(removeSpecialPeriod);
 
-    for (let j: number = 0; j < length; j++) {
-      if (moduleTmp[j] !== "" && periodTmp[j] !== "") {
-        moduleList.push(moduleTmp[j]);
-        periodList.push(periodTmp[j]);
-      }
-    }
+    const classList: string[][] = createClassList(moduleTmp, periodTmp);
 
+    
     /* if (isMultipleTerms(module) === true) {
       let devidePositioin: number = module.indexOf("秋");
     } else {
       moduleList = [module];
     }
     */
+    
+    for (let j: number=0; j < classList.length; j++) {
 
-    //Semester loop
-    for (let j = 0; j < moduleList.length; j++) {
-      //Module loop
-      for (let k: number = 1; k < moduleList[j].length; k++) {
-        //Period loop
-        for (let l: number = 0; l < devidedPeriod.length; l++) {
-          if (moduleList[j].slice(1) === "ABC") {
-            devidedModule = moduleList[j][0] + moduleList[j][1];
+          if (classList[j][0].slice(1) === "ABC") {
+            isABC = true;
             icsEvent =
-              getSpan(devidedModule, devidedPeriod[l]) +
+              getSpan(classList[j][0], classList[j][1]) +
               getABCRepeat(devidedModule, devidedPeriod[l]) +
               getMisc(name, classroom, description);
             output += eventBegin + icsEvent + eventEnd;
-            isABC = true;
           } else {
-            devidedModule = moduleList[j][0] + moduleList[j][k];
             icsEvent =
-              getSpan(devidedModule, devidedPeriod[l]) +
+              getSpan(classList[j][0], classList[j][0]) +
               getRepeat(devidedModule, devidedPeriod[l]) +
               getMisc(name, classroom, description);
             output += eventBegin + icsEvent + eventEnd;
@@ -547,7 +574,7 @@ const parseCsv = (
           break;
         }
       }
-    }
+}
 
     //reschedule
     devidedPeriod = parsePeriod(period);

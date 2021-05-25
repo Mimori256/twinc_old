@@ -1,8 +1,6 @@
 "use strict";
 exports.__esModule = true;
 
-import parsePeriod from parsePeriod;
-
 //Global variables
 var beginSpringA = {
     月: "20210412",
