@@ -1,4 +1,7 @@
+//Import
+
 //Global variables
+
 const beginSpringA: { [key: string]: string } = {
   月: "20210412",
   火: "20210413",
@@ -67,6 +70,8 @@ const engWeekday: { [key: string]: string } = {
   金: "FR",
   土: "SA"
 };
+
+const weekdayList: string[] = ["月", "火", "水", "木", "金", "土"];
 
 //the head element(0) is a dummy
 const classBeginPeriod: string[] = [
@@ -173,15 +178,14 @@ const addZero = (str: string): string => {
 };
 
 const isAvailableModule = (module: string): boolean => {
-  return module.indexOf("春") == -1 && module.indexOf("秋") == -1
+  return module.indexOf("春") === -1 && module.indexOf("秋") === -1
     ? false
     : true;
 };
 
 const isAvaibaleDay = (period: string): boolean => {
   //There's no Sunday class in the year
-  const availableDayList: string[] = ["月", "火", "水", "木", "金", "土"];
-  return availableDayList.includes(period.slice(0, 1)) ? true : false;
+  return weekdayList.includes(period.slice(0, 1)) ? true : false;
 };
 
 const isMultipleTerms = (module: string): boolean => {
@@ -190,8 +194,12 @@ const isMultipleTerms = (module: string): boolean => {
     : false;
 };
 
+const isMutltipleModules = (module: string): boolean => {
+  return module.indexOf(" ") !== -1 ? true : false;
+};
+
 //Remove special module class
-const formedModule = (module: string): string => {
+const removeSpecialModule = (module: string): string => {
   const removeList: string[] = [" 夏季休業中", " 春季休業中"];
 
   for (let i: number = 0; i < removeList.length; i++) {
@@ -201,14 +209,40 @@ const formedModule = (module: string): string => {
   return module;
 };
 
+const getDayCount = (period: string): number => {
+  let count: number = 0;
+  for (const day of weekdayList) {
+    if (period.indexOf(day) !== -1) count++;
+  }
+  return count;
+};
+
 const removeSpecialPeriod = (period: string): string => {
-  const removeList: string[] = [" 集中", ",集中", " 随時", " 応談"];
+  const removeList: string[] = [
+    " 集中",
+    ",集中",
+    " 随時",
+    ",随時",
+    " 応談",
+    ",応談"
+  ];
   for (let i: number = 0; i < removeList.length; i++) {
     period = period.replace(removeList[i], "");
   }
   return period;
 };
 
+const getDayIndex = (period: string): number[] => {
+  let dayIndexList: number[] = [];
+  for (let i: number = 0; i < period.length; i++) {
+    if (weekdayList.indexOf(period[i]) !== -1) {
+      dayIndexList.push(i);
+    }
+  }
+  return dayIndexList;
+};
+
+/*
 const formedPeriod = (period: string): string[] => {
   if (period.indexOf("・") != -1 && period.length == 4) {
     period = period.replace("・", ",");
@@ -218,6 +252,14 @@ const formedPeriod = (period: string): string[] => {
   } else {
     return [period];
   }
+};
+*/
+
+const formedPeriod = (period: string): string => {
+  //Use ":" as a separator
+  const dayCount: number = getDayCount(period);
+  if (dayCount === 1) return period;
+  const dayIndex: number[] = getDayIndex(period);
 };
 
 const getSpan = (module: string, period: string): string => {
@@ -432,13 +474,17 @@ const parseCsv = (
 
   //Search courses
   for (let i: number = 0; i < idList.length - 1; i++) {
-    courseList.push(kdb[idList[i]]);
+    try {
+      courseList.push(kdb[idList[i]]);
+    } catch (error) {
+      //Do nothing
+    }
   }
 
   for (let i: number = 0; i < courseList.length; i++) {
     const name: string = courseList[i][0];
-    const module: string = formedModule(courseList[i][1]);
-    const period: string = removeSpecialPeriod(courseList[i][2]);
+    const module: string = courseList[i][1];
+    const period: string = courseList[i][2];
     const classroom: string = courseList[i][3];
     const description: string = courseList[i][4];
 
@@ -450,27 +496,27 @@ const parseCsv = (
 
     isValid = true;
 
-    let devidedModule: string = "";
-    //string list
-    let devidedPeriod: string[];
     let isABC: boolean = false;
 
-    let moduleList: string[];
-    if (isMultipleTerms(module) === true) {
+    let moduleTmp: string[] = module.split(" ").map(removeSpecialModule);
+    let periodTmp: string[] = period.split(" ").map(removeSpecialPeriod);
+    let moduleList: string[] = [];
+    let periodList: string[] = [];
+    let length: number = moduleTmp.length;
+
+    for (let j: number = 0; j < length; j++) {
+      if (moduleTmp[j] !== "" && periodTmp[j] !== "") {
+        moduleList.push(moduleTmp[j]);
+        periodList.push(periodTmp[j]);
+      }
+    }
+
+    /* if (isMultipleTerms(module) === true) {
       let devidePositioin: number = module.indexOf("秋");
-      moduleList = (
-        module.slice(0, devidePositioin) +
-        "," +
-        module.slice(devidePositioin)
-      ).split(",");
     } else {
       moduleList = [module];
     }
-
-    devidedPeriod =
-      period.length > 4 || period.indexOf("・") != -1
-        ? formedPeriod(period)
-        : [period];
+    */
 
     //Semester loop
     for (let j = 0; j < moduleList.length; j++) {
@@ -504,10 +550,7 @@ const parseCsv = (
     }
 
     //reschedule
-    devidedPeriod =
-      period.length > 4 || period.indexOf("・") != -1
-        ? formedPeriod(period)
-        : [period];
+    devidedPeriod = parsePeriod(period);
 
     //Semester loop
     for (let j: number = 0; j < moduleList.length; j++) {
