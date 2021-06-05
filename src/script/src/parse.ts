@@ -176,24 +176,18 @@ const addZero = (str: string): string => {
 };
 
 const isAvailableModule = (module: string): boolean => {
-  return module.indexOf("春") === -1 && module.indexOf("秋") === -1
-    ? false
-    : true;
+  return !(module.indexOf("春") === -1 && module.indexOf("秋") === -1);
 };
 
 const isAvaibaleDay = (period: string): boolean => {
   //There's no Sunday class in the year
-  return weekdayList.includes(period.slice(0, 1)) ? true : false;
+  return weekdayList.includes(period.slice(0, 1));
 };
 
-const isMultipleTerms = (module: string): boolean => {
-  return module.indexOf("春") !== -1 && module.indexOf("秋") !== -1
-    ? true
-    : false;
-};
-
-const isMutltipleModules = (module: string): boolean => {
-  return module.indexOf(" ") !== -1 ? true : false;
+const isCombinedModule = (module: string): boolean => {
+  const springCount: number = ( module.match( /春/g ) || [] ).length ;
+  const fallCount: number = ( module.match( /秋/g ) || [] ).length ;
+  return springCount + fallCount > 1;
 };
 
 //Remove special module class
@@ -241,6 +235,17 @@ const getDayIndex = (period: string): number[] => {
   return dayIndexList;
 };
 
+const getModuleSeparateIndex = (module: string): number => {
+  const seasonList: string[] = ["春", "秋"];
+  let count: number = 0;
+  let index: number = 0;
+  for (let i:number = 0; i<module.length; i++) {
+    if (seasonList.includes(module[i])) count++;
+    if (count === 2) index = i; 
+  } 
+  return index;
+}
+
 /*
 const formedPeriod = (period: string): string[] => {
   if (period.indexOf("・") != -1 && period.length == 4) {
@@ -261,17 +266,42 @@ const formedPeriod = (period: string): string => {
   const dayCount: number = getDayCount(period);
   if (dayCount === 1) return period;
   const dayIndex: number[] = getDayIndex(period);
-  const numInfo: string = period.slice((dayIndex[dayIndex.length -1 ] +1));
-
+  const numInfo: string = period.slice((dayIndex[dayIndex.length -1 ] +2));
+  let count: number = 0;
   for (let i: number = 0; i< listedPeriod.length; i++) {
     if(weekdayList.includes(listedPeriod[i])) {
-      listedPeriod[i] = listedPeriod[i] + numInfo;
+      listedPeriod[i] = listedPeriod[i] + numInfo + ":";
+      count++
     }
+    if(count === dayCount) break;
   }
-  return listedPeriod.join(":");
+  return listedPeriod.join("");
 };
 
+const separateModule = (moduleList: string[], periodList: string[]): string[][] => {
+  let newModuleList :string[] = [];
+  let newPeriodList: string[] = [];
+  let tmp1: string = "";
+  let tmp2: string = "";
+  for (let i: number = 0; i < moduleList.length; i++) {
+    if(isCombinedModule(moduleList[i])) {
+    let separateIndex: number = getModuleSeparateIndex(moduleList[i]);  
+    //First module
+    tmp1 = moduleList[i].slice(0,separateIndex);
+    //Second module
+    tmp2 = moduleList[i].slice(separateIndex);
+    newModuleList.push(tmp1);
+    newModuleList.push(tmp2);
+    newPeriodList.push(periodList[i]);
+    newPeriodList.push(periodList[i]);
+    }
+  }  
+  return [newModuleList, newPeriodList];
+}
+
 const createClassList = (moduleTmp: string[], periodTmp: string[]): string[][] => {
+
+  [moduleTmp, periodTmp] = separateModule(moduleTmp, periodTmp)
 
   let moduleList: string[] = [];
   let periodList: string[] = [];
@@ -280,11 +310,14 @@ const createClassList = (moduleTmp: string[], periodTmp: string[]): string[][] =
         if (moduleTmp[i] !== "" && periodTmp[i] !== "") {
           moduleList.push(moduleTmp[i]);
           periodList.push(periodTmp[i]);
+      }else {
+        continue;
       }
+    
     }
       //Index error
       catch(error) {
-        moduleList.push(moduleTmp[moduleTmp.length -1])*
+        moduleList.push(moduleTmp[moduleTmp.length -1]);
         periodList.push(periodTmp[i]);
       }
     }
@@ -541,6 +574,7 @@ const parseCsv = (
     const moduleTmp: string[] = module.split(" ").map(removeSpecialModule);
     const periodTmp: string[] = period.split(" ").map(removeSpecialPeriod);
 
+    //classList: [moduleList, periodList]
     const classList: string[][] = createClassList(moduleTmp, periodTmp);
 
     
@@ -551,13 +585,13 @@ const parseCsv = (
     }
     */
     
-    for (let j: number=0; j < classList.length; j++) {
+    for (let j: number=0; j < classList[0].length; j++) {
 
           if (classList[j][0].slice(1) === "ABC") {
             isABC = true;
             icsEvent =
               getSpan(classList[j][0], classList[j][1]) +
-              getABCRepeat(devidedModule, devidedPeriod[l]) +
+              getABCRepeat(classList[j][0], classList[j][1]) +
               getMisc(name, classroom, description);
             output += eventBegin + icsEvent + eventEnd;
           } else {
