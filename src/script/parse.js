@@ -1,464 +1,416 @@
-"use strict";
-exports.__esModule = true;
-
 //Global variables
-var beginSpringA = {
-    月: "20210412",
-    火: "20210413",
-    水: "20210414",
-    木: "20210408",
-    金: "20210409",
-    土: "20210410"
+const beginSpringA = {
+  月: "20210412",
+  火: "20210413",
+  水: "20210414",
+  木: "20210408",
+  金: "20210409",
+  土: "20210410"
 };
-var beginSpringB = {
-    月: "20210524",
-    火: "20210525",
-    水: "20210526",
-    木: "20210520",
-    金: "20210521",
-    土: "20210522"
+const beginSpringB = {
+  月: "20210524",
+  火: "20210525",
+  水: "20210526",
+  木: "20210520",
+  金: "20210521",
+  土: "20210522"
 };
-var beginSpringC = {
-    月: "20210705",
-    火: "20210706",
-    水: "20210707",
-    木: "20210701",
-    金: "20210702",
-    土: "20210703"
+const beginSpringC = {
+  月: "20210705",
+  火: "20210706",
+  水: "20210707",
+  木: "20210701",
+  金: "20210702",
+  土: "20210703"
 };
-var beginFallA = {
-    月: "20211004",
-    火: "20211005",
-    水: "20211006",
-    木: "20211007",
-    金: "20211001",
-    土: "20211002"
+const beginFallA = {
+  月: "20211004",
+  火: "20211005",
+  水: "20211006",
+  木: "20211007",
+  金: "20211001",
+  土: "20211002"
 };
-var beginFallB = {
-    月: "20211115",
-    火: "20211116",
-    水: "20211117",
-    木: "20211111",
-    金: "20211112",
-    土: "20211113"
+const beginFallB = {
+  月: "20211115",
+  火: "20211116",
+  水: "20211117",
+  木: "20211111",
+  金: "20211112",
+  土: "20211113"
 };
-var beginFallC = {
-    月: "20220124",
-    火: "20220111",
-    水: "20220112",
-    木: "20220106",
-    金: "20220107",
-    土: "20220108"
+const beginFallC = {
+  月: "20220124",
+  火: "20220111",
+  水: "20220112",
+  木: "20220106",
+  金: "20220107",
+  土: "20220108"
 };
-var springEndDate = {
-    A: "20210518T130000Z;",
-    B: "20210623T130000Z;",
-    C: "20210805T130000Z;"
+const springEndDate = {
+  A: "20210518T130000Z;",
+  B: "20210623T130000Z;",
+  C: "20210805T130000Z;"
 };
-var fallEndDate = {
-    A: "20211109T130000Z;",
-    B: "20211221T130000Z;",
-    C: "20220215T130000Z;"
+const fallEndDate = {
+  A: "20211109T130000Z;",
+  B: "20211221T130000Z;",
+  C: "20220215T130000Z;"
 };
-var engWeekday = {
-    月: "MO",
-    火: "TU",
-    水: "WE",
-    木: "TH",
-    金: "FR",
-    土: "SA"
+const engWeekday = {
+  月: "MO",
+  火: "TU",
+  水: "WE",
+  木: "TH",
+  金: "FR",
+  土: "SA"
 };
+const weekdayList = ["月", "火", "水", "木", "金", "土"];
 //the head element(0) is a dummy
-var classBeginPeriod = [
-    "0",
-    "084000",
-    "101000",
-    "121500",
-    "134500",
-    "151500",
-    "164500",
-    "182000",
-    "194500"
+const classBeginPeriod = [
+  "0",
+  "084000",
+  "101000",
+  "121500",
+  "134500",
+  "151500",
+  "164500",
+  "182000",
+  "194500"
 ];
-var classEndPeriod = [
-    "0",
-    "095500",
-    "112500",
-    "133000",
-    "150000",
-    "163000",
-    "180000",
-    "193500",
-    "210000"
+const classEndPeriod = [
+  "0",
+  "095500",
+  "112500",
+  "133000",
+  "150000",
+  "163000",
+  "180000",
+  "193500",
+  "210000"
 ];
-var springAHolidays = [
-    "20210429",
-    "20210503",
-    "20210504",
-    "20210505",
-    "20210507"
+const springAHolidays = [
+  "20210429",
+  "20210503",
+  "20210504",
+  "20210505",
+  "20210507"
 ];
-var springBHolidays = [];
-var springCHolidays = ["20210722", "20210723"];
-var fallAHolidays = [
-    "20211103",
-    "20211105",
-    "20211108",
-    "20211109"
+const springBHolidays = [];
+const springCHolidays = ["20210722", "20210723"];
+const fallAHolidays = ["20211103", "20211105", "20211108", "20211109"];
+const fallBHolidays = ["20211123", "20211125", "20211129", "20211130"];
+const fallCHolidays = [
+  "20220110",
+  "20220113",
+  "20220114",
+  "20220117",
+  "20220118",
+  "20220211"
 ];
-var fallBHolidays = [
-    "20211123",
-    "20211125",
-    "20211129",
-    "20211130"
+const springABCHolidays = [
+  "20210429",
+  "20210503",
+  "20210504",
+  "20210505",
+  "20210507",
+  "20210519",
+  "20210722",
+  "20210723"
 ];
-var fallCHolidays = [
-    "20220110",
-    "20220113",
-    "20220114",
-    "20220117",
-    "20220118",
-    "20220211"
-];
-var springABCHolidays = [
-    "20210429",
-    "20210503",
-    "20210504",
-    "20210505",
-    "20210507",
-    "20210519",
-    "20210722",
-    "20210723"
-];
-var fallABCHolidays = [
-    "20211103",
-    "20211105",
-    "20211108",
-    "20211109",
-    "20211123",
-    "20211125",
-    "20211129",
-    "20211130",
-    "20220110",
-    "20220113",
-    "20220114",
-    "20220117",
-    "20220118",
-    "20220204"
+const fallABCHolidays = [
+  "20211103",
+  "20211105",
+  "20211108",
+  "20211109",
+  "20211123",
+  "20211125",
+  "20211129",
+  "20211130",
+  "20211229",
+  "20211230",
+  "20211231",
+  "20220101",
+  "20220102",
+  "20220103",
+  "20220104",
+  "20220105",
+  "20220110",
+  "20220113",
+  "20220114",
+  "20220117",
+  "20220118",
+  "20220204"
 ];
 //Date:Module:Class schedule of the day
-var rescheduledDateList = [
-    "20210507",
-    "20210722",
-    "20211109",
-    "20211125",
-    "20220113",
-    "20220118"
+const rescheduledDateList = [
+  "20210507",
+  "20210722",
+  "20211109",
+  "20211125",
+  "20220113",
+  "20220118"
 ];
-var rescheduledClassList = [
-    "春A:水",
-    "春C:金",
-    "秋B:水",
-    "秋B:火",
-    "秋C:金",
-    "秋C:月"
+const rescheduledClassList = [
+  "春A:水",
+  "春C:金",
+  "秋B:水",
+  "秋B:火",
+  "秋C:金",
+  "秋C:月"
 ];
-var addZero = function (str) {
-    return str.length === 1 && str !== "T" ? "0" + str : str;
+const addZero = str => {
+  return str.length === 1 && str !== "T" ? "0" + str : str;
 };
-var isAvailableModule = function (module) {
-    return module.indexOf("春") == -1 && module.indexOf("秋") == -1
-        ? false
-        : true;
+const isAvailableModule = module => {
+  return !(module.indexOf("春") === -1 && module.indexOf("秋") === -1);
 };
-var isAvaibaleDay = function (period) {
-    //There's no Sunday class in the year
-    var availableDayList = ["月", "火", "水", "木", "金", "土"];
-    return availableDayList.includes(period.slice(0, 1)) ? true : false;
+const isAvaibaleDay = period => {
+  //There's no Sunday class in the year
+  return weekdayList.includes(period.slice(0, 1));
 };
-var isMultipleTerms = function (module) {
-    return module.indexOf("春") !== -1 && module.indexOf("秋") !== -1
-        ? true
-        : false;
-};
-//Remove special module class
-var formedModule = function (module) {
-    var removeList = [" 夏季休業中", " 春季休業中"];
-    for (var i = 0; i < removeList.length; i++) {
-        module = module.replace(removeList[i], "");
+const getModulePeriodList = (moduleList, periodList) => {
+  let modulePeriodList = [];
+  let tmpList = [];
+  if (moduleList.length === 1 && periodList.length > 1) {
+    for (let i = 0; i < periodList.length; i++) {
+      tmpList = tmpList.concat(periodList[i]);
     }
-    return module;
+    periodList = [tmpList];
+  }
+  for (let i = 0; i < moduleList.length; i++) {
+    for (let j = 0; j < moduleList[i].length; j++) {
+      for (let k = 0; k < periodList[i].length; k++) {
+        modulePeriodList.push([moduleList[i][j], periodList[i][k]]);
+      }
+    }
+  }
+  return modulePeriodList;
 };
-var removeSpecialPeriod = function (period) {
-    var removeList = [" 集中", ",集中", " 随時", " 応談"];
-    for (var i = 0; i < removeList.length; i++) {
-        period = period.replace(removeList[i], "");
+const getSpan = (module, period) => {
+  let beginDate = "";
+  const DTSTART = "DTSTART;TZID=Asia/Tokyo:";
+  const DTEND = "DTEND;TZID=Asia/Tokyo:";
+  //Get the start and end date of the module
+  if (module[0] == "春") {
+    switch (module[1]) {
+      case "A":
+        beginDate = beginSpringA[period[0]];
+        break;
+      case "B":
+        beginDate = beginSpringB[period[0]];
+        break;
+      case "C":
+        beginDate = beginSpringC[period[0]];
+        break;
     }
-    return period;
+  } else {
+    switch (module[1]) {
+      case "A":
+        beginDate = beginFallA[period[0]];
+        break;
+      case "B":
+        beginDate = beginFallB[period[0]];
+        break;
+      case "C":
+        beginDate = beginFallC[period[0]];
+        break;
+    }
+  }
+  //Get the start and end time of the course
+  let beginPeriod = classBeginPeriod[parseInt(period.slice(1, 2))];
+  let endPeriod = classEndPeriod[parseInt(period.slice(-1))];
+  return (
+    DTSTART +
+    beginDate +
+    "T" +
+    beginPeriod +
+    "\n" +
+    DTEND +
+    beginDate +
+    "T" +
+    endPeriod +
+    "\n"
+  );
 };
-var formedPeriod = function (period) {
-    if (period.indexOf("・") != -1 && period.length == 4) {
-        period = period.replace("・", ",");
-        return (period[0] + period.slice(-1) + period.slice(2, 4)).split(",");
-    }
-    else if (period.indexOf("・") != -1 && period.length == 6) {
-        return (period[0] + period.slice(3) + period.slice(1)).split("・");
-    }
-    else {
-        return [period];
-    }
+const addReschedule = (index, period) => {
+  let beginDate = rescheduledDateList[index];
+  const DTSTART = "DTSTART;TZID=Asia/Tokyo:";
+  const DTEND = "DTEND;TZID=Asia/Tokyo:";
+  //Get the start and end time of the course
+  let beginPeriod = classBeginPeriod[parseInt(period.slice(1, 2))];
+  let endPeriod = classEndPeriod[parseInt(period.slice(-1))];
+  return (
+    DTSTART +
+    beginDate +
+    "T" +
+    beginPeriod +
+    "\n" +
+    DTEND +
+    beginDate +
+    "T" +
+    endPeriod +
+    "\n"
+  );
 };
-var getSpan = function (module, period) {
-    var beginDate = "";
-    var DTSTART = "DTSTART;TZID=Asia/Tokyo:";
-    var DTEND = "DTEND;TZID=Asia/Tokyo:";
-    //Get the start and end date of the module
-    if (module[0] == "春") {
-        switch (module[1]) {
-            case "A":
-                beginDate = beginSpringA[period[0]];
-                break;
-            case "B":
-                beginDate = beginSpringB[period[0]];
-                break;
-            case "C":
-                beginDate = beginSpringC[period[0]];
-                break;
-        }
-    }
-    else {
-        switch (module[1]) {
-            case "A":
-                beginDate = beginFallA[period[0]];
-                break;
-            case "B":
-                beginDate = beginFallB[period[0]];
-                break;
-            case "C":
-                beginDate = beginFallC[period[0]];
-                break;
-        }
-    }
-    //Get the start and end time of the course
-    var beginPeriod = classBeginPeriod[parseInt(period.slice(1, 2))];
-    var endPeriod = classEndPeriod[parseInt(period.slice(-1))];
-    return (DTSTART +
-        beginDate +
-        "T" +
-        beginPeriod +
-        "\n" +
-        DTEND +
-        beginDate +
-        "T" +
-        endPeriod +
-        "\n");
-};
-var addReschedule = function (index, period) {
-    var beginDate = rescheduledDateList[index];
-    var DTSTART = "DTSTART;TZID=Asia/Tokyo:";
-    var DTEND = "DTEND;TZID=Asia/Tokyo:";
-    //Get the start and end time of the course
-    var beginPeriod = classBeginPeriod[parseInt(period.slice(1, 2))];
-    var endPeriod = classEndPeriod[parseInt(period.slice(-1))];
-    return (DTSTART +
-        beginDate +
-        "T" +
-        beginPeriod +
-        "\n" +
-        DTEND +
-        beginDate +
-        "T" +
-        endPeriod +
-        "\n");
-};
-var getRepeat = function (module, period) {
-    var rrule = "RRULE:FREQ=WEEKLY;UNTIL=";
-    var exdate;
-    rrule +=
-        module[0] == "春"
-            ? springEndDate[module.slice(-1)]
-            : fallEndDate[module.slice(-1)];
-    rrule += "BYDAY=" + engWeekday[period[0]] + "\n";
-    exdate = removeHolidays(module, period);
-    return rrule + exdate;
+const getRepeat = (module, period) => {
+  let rrule = "RRULE:FREQ=WEEKLY;UNTIL=";
+  let exdate;
+  rrule +=
+    module[0] == "春"
+      ? springEndDate[module.slice(-1)]
+      : fallEndDate[module.slice(-1)];
+  rrule += "BYDAY=" + engWeekday[period[0]] + "\n";
+  exdate = removeHolidays(module, period);
+  return rrule + exdate;
 };
 //For ABC module class
-var getABCRepeat = function (module, period) {
-    var rrule = "RRULE:FREQ=WEEKLY;UNTIL=";
-    var exdate;
-    rrule += module[0] == "春" ? "20210729T130000Z;" : "20220208T130000Z;";
-    rrule += "BYDAY=" + engWeekday[period[0]] + "\n";
-    exdate = removeABCHolidays(module, period);
-    return rrule + exdate;
+const getABCRepeat = (module, period) => {
+  let rrule = "RRULE:FREQ=WEEKLY;UNTIL=";
+  let exdate;
+  rrule += module[0] == "春" ? "20210729T130000Z;" : "20220208T130000Z;";
+  rrule += "BYDAY=" + engWeekday[period[0]] + "\n";
+  exdate = removeABCHolidays(module, period);
+  return rrule + exdate;
 };
-var getMisc = function (name, classroom, desc) {
-    //Create a timestamp for this year
-    var year = "2021";
-    var month = "4";
-    var date = "8";
-    var hour = "0";
-    var minute = "0";
-    var timeStampList = [year, month, date, "T", hour, minute, "00"];
-    var timeStamp = timeStampList.map(function (x) { return addZero(x); }).join("");
-    var dtstamp = "DTSTAMP:" + timeStamp;
-    var created = "CREATED:" + timeStamp;
-    var description = "DESCRIPTION:" + desc;
-    var lastModified = "LAST-MODIFIED:" + timeStamp;
-    var classroomLocation = "LOCATION:" + classroom;
-    var sequence = "SEQUENCE:0";
-    var confirmed = "STATUS:CONFIRMED";
-    var summary = "SUMMARY:" + name;
-    var transp = "TRANSP:OPAQUE";
-    return [
-        dtstamp,
-        created,
-        description,
-        lastModified,
-        classroomLocation,
-        sequence,
-        confirmed,
-        summary,
-        transp
-    ].join("\n");
+const getMisc = (name, classroom, desc) => {
+  //Create a timestamp for this year
+  const year = "2021";
+  const month = "4";
+  const date = "8";
+  const hour = "0";
+  const minute = "0";
+  const timeStampList = [year, month, date, "T", hour, minute, "00"];
+  const timeStamp = timeStampList.map(x => addZero(x)).join("");
+  const dtstamp = "DTSTAMP:" + timeStamp;
+  const created = "CREATED:" + timeStamp;
+  const description = "DESCRIPTION:" + desc;
+  const lastModified = "LAST-MODIFIED:" + timeStamp;
+  const classroomLocation = "LOCATION:" + classroom;
+  const sequence = "SEQUENCE:0";
+  const confirmed = "STATUS:CONFIRMED";
+  const summary = "SUMMARY:" + name;
+  const transp = "TRANSP:OPAQUE";
+  return [
+    dtstamp,
+    created,
+    description,
+    lastModified,
+    classroomLocation,
+    sequence,
+    confirmed,
+    summary,
+    transp
+  ].join("\n");
 };
-var removeHolidays = function (module, period) {
-    var beginPeriod = classBeginPeriod[parseInt(period.slice(1, 2))];
-    var holidaysList = [];
-    var exdate = "EXDATE:";
-    switch (module) {
-        case "春A":
-            holidaysList = springAHolidays;
-            break;
-        case "春B":
-            holidaysList = springBHolidays;
-            break;
-        case "春C":
-            holidaysList = springCHolidays;
-            break;
-        case "秋A":
-            holidaysList = fallAHolidays;
-            break;
-        case "秋B":
-            holidaysList = fallBHolidays;
-            break;
-        case "秋C":
-            holidaysList = fallCHolidays;
-            break;
+const removeHolidays = (module, period) => {
+  let beginPeriod = classBeginPeriod[parseInt(period.slice(1, 2))];
+  let holidaysList = [];
+  let exdate = "EXDATE:";
+  if (module[0] === "春") {
+    for (let i = 1; i < module.length; i++) {
+      if (module[i] === "A")
+        holidaysList = holidaysList.concat(springAHolidays);
+      else if (module[i] === "B")
+        holidaysList = holidaysList.concat(springBHolidays);
+      else if (module[i] === "C")
+        holidaysList = holidaysList.concat(springCHolidays);
     }
-    //Check if the list is blank
-    if (holidaysList.length === 0) {
-        return "";
+  }
+  if (module[0] === "秋") {
+    for (let i = 1; i < module.length; i++) {
+      if (module[i] === "A") holidaysList = holidaysList.concat(fallAHolidays);
+      else if (module[i] === "B")
+        holidaysList = holidaysList.concat(fallBHolidays);
+      else if (module[i] === "C")
+        holidaysList = holidaysList.concat(fallCHolidays);
     }
-    for (var i = 0; i < holidaysList.length; i++) {
-        exdate += holidaysList[i] + "T" + beginPeriod + ",";
-    }
-    return exdate + "\n";
+  }
+  //Check if the list is blank
+  if (holidaysList.length === 0) {
+    return "";
+  }
+  for (let i = 0; i < holidaysList.length; i++) {
+    exdate += holidaysList[i] + "T" + beginPeriod + ",";
+  }
+  return exdate + "\n";
 };
 //For ABC classes
-var removeABCHolidays = function (module, period) {
-    var beginPeriod = classBeginPeriod[parseInt(period.slice(1, 2))];
-    var holidaysList;
-    var exdate = "EXDATE:";
-    holidaysList = module[0] == "春" ? springABCHolidays : fallABCHolidays;
-    for (var i = 0; i < holidaysList.length; i++) {
-        exdate += holidaysList[i] + "T" + beginPeriod + ",";
-    }
-    return exdate + "\n";
+const removeABCHolidays = (module, period) => {
+  let beginPeriod = classBeginPeriod[parseInt(period.slice(1, 2))];
+  let holidaysList;
+  let exdate = "EXDATE:";
+  holidaysList = module[0] == "春" ? springABCHolidays : fallABCHolidays;
+  for (let i = 0; i < holidaysList.length; i++) {
+    exdate += holidaysList[i] + "T" + beginPeriod + ",";
+  }
+  return exdate + "\n";
 };
-var parseCsv = function (idList, kdb) {
-    var output = "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinC 1.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
-    idList = idList.map(function (x) { return x.replace(/[\"]/g, ""); });
-    idList = idList.map(function (x) { return x.replace(/\r/g, ""); });
-    var eventBegin = "BEGIN:VEVENT\n";
-    var eventEnd = "\nEND:VEVENT\n";
-    var courseList = [];
-    var isValid = false;
-    //Search courses
-    for (var i = 0; i < idList.length - 1; i++) {
-        courseList.push(kdb[idList[i]]);
+const parseCsv = (idList, kdb) => {
+  let output =
+    "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinC 1.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
+  idList = idList.map(x => x.replace(/[\"]/g, ""));
+  idList = idList.map(x => x.replace(/\r/g, ""));
+  const eventBegin = "BEGIN:VEVENT\n";
+  const eventEnd = "\nEND:VEVENT\n";
+  let courseList = [];
+  let isValid = false;
+  let isABC;
+  //Search courses
+  for (let i = 0; i < idList.length - 1; i++) {
+    try {
+      courseList.push(kdb[idList[i]]);
+    } catch (error) {
+      //Do nothing
     }
-    for (var i = 0; i < courseList.length; i++) {
-        var name_1 = courseList[i][0];
-        var module = formedModule(courseList[i][1]);
-        var period = removeSpecialPeriod(courseList[i][2]);
-        var classroom = courseList[i][3];
-        var description = courseList[i][4];
-        var icsEvent = "";
-        if (!isAvailableModule(module) || !isAvaibaleDay(period)) {
-            continue;
+  }
+  for (let i = 0; i < courseList.length; i++) {
+    const name = courseList[i].name;
+    const moduleList = courseList[i].module;
+    const periodList = courseList[i].period;
+    const classroom = courseList[i].room;
+    const description = courseList[i].description;
+    const modulePeriodList = getModulePeriodList(moduleList, periodList);
+    let module;
+    let period;
+    let devidedModule;
+    let devidedPeriod;
+    let rescheduleIndex;
+    for (let a = 0; a < modulePeriodList.length; a++) {
+      module = modulePeriodList[a][0];
+      period = modulePeriodList[a][1];
+      let icsEvent = "";
+      if (!isAvailableModule(module) || !isAvaibaleDay(period)) continue;
+      if (module.slice(1) === "ABC") {
+        isABC = true;
+        icsEvent =
+          getSpan(module, period) +
+          getABCRepeat(module, period) +
+          getMisc(name, classroom, description);
+        output += eventBegin + icsEvent + eventEnd;
+      } else {
+        icsEvent =
+          getSpan(module, period) +
+          getRepeat(module, period) +
+          getMisc(name, classroom, description);
+        output += eventBegin + icsEvent + eventEnd;
+        isABC = false;
+      }
+      for (let j = 1; j < module.length; j++) {
+        devidedModule = module[0] + module[j];
+        devidedPeriod = period[0];
+        rescheduleIndex = rescheduledClassList.indexOf(
+          devidedModule + ":" + devidedPeriod
+        );
+        if (rescheduleIndex !== -1) {
+          icsEvent =
+            addReschedule(rescheduleIndex, period) +
+            getMisc(name, classroom, description);
+          output += eventBegin + icsEvent + eventEnd;
         }
-        isValid = true;
-        var devidedModule = "";
-        //string list
-        var devidedPeriod = void 0;
-        var isABC = false;
-        var moduleList = void 0;
-        if (isMultipleTerms(module) === true) {
-            var devidePositioin = module.indexOf("秋");
-            moduleList = (module.slice(0, devidePositioin) +
-                "," +
-                module.slice(devidePositioin)).split(",");
-        }
-        else {
-            moduleList = [module];
-        }
-        devidedPeriod =
-            period.length > 4 || period.indexOf("・") != -1
-                ? formedPeriod(period)
-                : [period];
-        //Semester loop
-        for (var j = 0; j < moduleList.length; j++) {
-            //Module loop
-            for (var k = 1; k < moduleList[j].length; k++) {
-                //Period loop
-                for (var l = 0; l < devidedPeriod.length; l++) {
-                    if (moduleList[j].slice(1) === "ABC") {
-                        devidedModule = moduleList[j][0] + moduleList[j][1];
-                        icsEvent =
-                            getSpan(devidedModule, devidedPeriod[l]) +
-                                getABCRepeat(devidedModule, devidedPeriod[l]) +
-                                getMisc(name_1, classroom, description);
-                        output += eventBegin + icsEvent + eventEnd;
-                        isABC = true;
-                    }
-                    else {
-                        devidedModule = moduleList[j][0] + moduleList[j][k];
-                        icsEvent =
-                            getSpan(devidedModule, devidedPeriod[l]) +
-                                getRepeat(devidedModule, devidedPeriod[l]) +
-                                getMisc(name_1, classroom, description);
-                        output += eventBegin + icsEvent + eventEnd;
-                        isABC = false;
-                    }
-                }
-                if (isABC === true) {
-                    break;
-                }
-            }
-        }
-        //reschedule
-        devidedPeriod =
-            period.length > 4 || period.indexOf("・") != -1
-                ? formedPeriod(period)
-                : [period];
-        //Semester loop
-        for (var j = 0; j < moduleList.length; j++) {
-            //Module loop
-            for (var k = 1; k < moduleList[j].length; k++) {
-                //Period loop
-                for (var l = 0; l < devidedPeriod.length; l++) {
-                    devidedModule = module[0] + module[k];
-                    var rescheduleIndex = rescheduledClassList.indexOf(devidedModule + ":" + period[0]);
-                    if (rescheduleIndex !== -1) {
-                        icsEvent =
-                            addReschedule(rescheduleIndex, devidedPeriod[l]) +
-                                getMisc(name_1, classroom, description);
-                        output += eventBegin + icsEvent + eventEnd;
-                    }
-                }
-            }
-        }
+      }
     }
-    return [output, isValid];
+  }
+  return [output, true];
 };
-exports["default"] = { parseCsv: parseCsv };
+export default { parseCsv };

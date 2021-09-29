@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import kdb from "../assets/kdb.json";
+import kdb from "../assets/kdb_twinc.json";
 import parse from "../script/parse.js";
 
 let tmp = "";
@@ -125,6 +125,7 @@ export default {
         document.getElementById("fileName").innerHTML =
           "ファイルが選択されていません";
         isUploaded = false;
+        idList = "";
         location.reload();
       }
     }
@@ -148,7 +149,7 @@ h1 {
   align-content: center;
   background-color: white;
   flex-direction: column;
-  min-height: 90vh;
+  min-height: 90%;
   width: 80%;
   margin: 1% 0 0 15%;
 }
@@ -184,7 +185,7 @@ label {
   cursor: pointer;
   outline: none;
   margin-top: 5%;
-  margin-left: 40%;
+  margin-left: 41%;
   margin-bottom: 3%;
 }
 
@@ -223,7 +224,7 @@ label:hover {
   cursor: pointer;
   outline: none;
   margin-top: 2.5%;
-  margin-left: 40%;
+  margin-left: 41%;
   margin-bottom: 2%;
 }
 
