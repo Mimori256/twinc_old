@@ -4,7 +4,9 @@
       <sidebar class="sidebar-area"></sidebar>
       <div class="content" align="center">
         <router-view />
-        <p>TWINSからダウンロードしたCSVファイルを選択してください。</p>
+        <p>
+          TWINS,またはkdbもどきからダウンロードしたCSVファイルを選択してください。
+        </p>
 
         <label>
           <input
@@ -55,6 +57,7 @@ import parse from "../script/parse.js";
 
 let tmp = "";
 let isUploaded = false;
+let isKdbAlt = false;
 
 export default {
   name: "Top",
@@ -76,58 +79,66 @@ export default {
           isUploaded = true;
           document.getElementById("fileName").innerHTML =
             fileNameList.join(" , ") + "が選択されています";
+          if (tmp.slice(0, 1) === "科") {
+            isKdbAlt = true;
+          }
           console.log("finish");
         };
       }
     },
 
     submit() {
-      if (isUploaded === false) {
+      let idList;
+      if (!isUploaded) {
         alert("ファイルが選択されていません");
-      } else {
-        let idList = tmp
-          .split("\n")
+      } else if (isKdbAlt) {
+        let tmpList = tmp.split("\n").filter(x => x.slice(0, 1) === '"');
+        tmpList = tmpList
+          .map(x => x.replace('"', ""))
           .filter((x, i, self) => self.indexOf(x) === i);
-        let [output, isValid] = parse.parseCsv(idList, kdb);
-        output += "END:VCALENDAR";
-
-        if (!isValid) {
-          alert("カレンダーに登録できる授業が存在しません");
-          return 0;
-        }
-        let blob = new Blob([output], { type: "text/plain" });
-        let now = new Date();
-        let hour = ("0" + now.getHours()).slice(-2);
-        let minute = ("0" + now.getMinutes()).slice(-2);
-        let second = ("0" + now.getSeconds()).slice(-2);
-        let name = `${hour}-${minute}-${second}${"twinc.ics"}`;
-
-        if (window.navigator.msSaveBlob) {
-          window.navigator.msSaveBlob(
-            new Blob([output], { type: "text/plain" }),
-            name
-          );
-        } else {
-          var a = document.createElement("a");
-          a.href = URL.createObjectURL(
-            new Blob([output], { type: "text/plain" })
-          );
-          //a.target   = '_blank';
-          a.download = name;
-          document.body.appendChild(a); //  FireFox specification
-          a.click();
-          document.body.removeChild(a); //  FireFox specification
-        }
-
-        //Clear selected file
-        let fileObject = document.getElementById("upload");
-        fileObject.value = "";
-        document.getElementById("fileName").innerHTML =
-          "ファイルが選択されていません";
-        isUploaded = false;
-        idList = "";
-        location.reload();
+        idList = tmpList;
+      } else {
+        idList = tmp.split("\n").filter((x, i, self) => self.indexOf(x) === i);
       }
+      let [output, isValid] = parse.parseCsv(idList, kdb);
+      output += "END:VCALENDAR";
+
+      if (!isValid) {
+        alert("カレンダーに登録できる授業が存在しません");
+        return 0;
+      }
+      let blob = new Blob([output], { type: "text/plain" });
+      let now = new Date();
+      let hour = ("0" + now.getHours()).slice(-2);
+      let minute = ("0" + now.getMinutes()).slice(-2);
+      let second = ("0" + now.getSeconds()).slice(-2);
+      let name = `${hour}-${minute}-${second}${"twinc.ics"}`;
+
+      if (window.navigator.msSaveBlob) {
+        window.navigator.msSaveBlob(
+          new Blob([output], { type: "text/plain" }),
+          name
+        );
+      } else {
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(
+          new Blob([output], { type: "text/plain" })
+        );
+        //a.target   = '_blank';
+        a.download = name;
+        document.body.appendChild(a); //  FireFox specification
+        a.click();
+        document.body.removeChild(a); //  FireFox specification
+      }
+
+      //Clear selected file
+      let fileObject = document.getElementById("upload");
+      fileObject.value = "";
+      document.getElementById("fileName").innerHTML =
+        "ファイルが選択されていません";
+      isUploaded = false;
+      idList = "";
+      location.reload();
     }
   }
 };

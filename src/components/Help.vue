@@ -4,6 +4,7 @@
       <div class="content" align="center">
         <span class="intruction" align="center">
           <p>以下、パソコンでの使用を想定しています</p>
+          <p>TWINSからカレンダーを作る場合</p>
           <p>
             <a
               href="https://twins.tsukuba.ac.jp/campusweb/campussmart.do"
@@ -15,6 +16,13 @@
           </p>
           <img src="@/assets/img/twinc1.png" width="80%" />
           <p>(ちなみに、このファイルはTwin:teの授業登録にも使えます)</p>
+          <p>KdBもどきからカレンダーを作る場合</p>
+          <p>
+            1．KdBもどきにPCでアクセスする</br>
+             2．仮の履修時間割を組む</br>
+            3．検索条件をクリアし、「お気に入り」にチェックを入れて検索する</br>
+            4．画面最下部の「CSVダウンロード」をクリックする
+          </p>
           <p>
             次に、そのファイルをTwinCのトップページで選択してから、ダウンロードボタンを押して、ファイルをダウンロードしてください。
           </p>
