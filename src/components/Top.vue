@@ -8,7 +8,7 @@
           TWINS,またはkdbもどきからダウンロードしたCSVファイルを選択してください。
         </p>
 
-        <label>
+        <label id="fileUpload">
           <input
             id="upload"
             type="file"
@@ -16,6 +16,15 @@
             multiple
             @change="loadCsv"
           />ファイルの選択
+        </label>
+
+        <label for="containDeadlines">
+          事前登録・履修登録締切日もカレンダーに登録する
+          <input
+            type="checkbox"
+            id="containDeadlines"
+            v-model="containDeadlines"
+          />
         </label>
 
         <span id="fileName"
@@ -33,7 +42,6 @@
           <p>試験期間、試験日の予定は登録されないことに注意してください</p>
           <p>モジュールの期間は学年暦に基づいています</p>
           <p>祝日に授業は登録されません</p>
-          <p>今年度開講されない授業は登録することができません</p>
           <p>通年授業は現在登録に対応していません</p>
           <p>
             学年暦に表示されている振替には対応していますが、それ以外の振替には対応していません
@@ -62,6 +70,10 @@ let isKdbAlt = false;
 export default {
   name: "Top",
 
+  data: {
+    containDeadlines: false
+  },
+
   methods: {
     loadCsv(e) {
       let vm = this;
@@ -88,6 +100,7 @@ export default {
     },
 
     submit() {
+      const ischecked = this.containDeadlines;
       let idList;
       if (!isUploaded) {
         alert("ファイルが選択されていません");
@@ -100,7 +113,7 @@ export default {
       } else {
         idList = tmp.split("\n").filter((x, i, self) => self.indexOf(x) === i);
       }
-      let [output, isValid] = parse.parseCsv(idList, kdb);
+      let [output, isValid] = parse.parseCsv(idList, kdb, ischecked);
       output += "END:VCALENDAR";
 
       if (!isValid) {
@@ -159,10 +172,10 @@ h1 {
   display: flex;
   align-content: center;
   background-color: white;
-  flex-direction: column;
-  min-height: 90%;
+  height: 100vh;
   width: 80%;
-  margin: 1% 0 0 15%;
+  margin: 0% 0% 0% 15%;
+  overflow: scroll;
 }
 
 .warn {
@@ -171,14 +184,21 @@ h1 {
 }
 
 .help_link {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
 }
 
 .link {
   color: #5ecfd1;
 }
 
-label {
+label,
+input[type="checkbox"] {
+  cursor: pointer;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+#fileUpload {
   position: center;
   white-space: nowrap;
   width: 10rem;
@@ -186,7 +206,7 @@ label {
   font-size: 1rem;
   letter-spacing: 0.1%;
   font-weight: 400;
-  color: #000;
+  color: #333;
   line-height: 2.5rem;
   background-color: #ddd;
   border: none;
@@ -195,9 +215,9 @@ label {
   transition: all 0.3s ease 0s;
   cursor: pointer;
   outline: none;
-  margin-top: 5%;
+  margin-top: 1.5%;
   margin-left: 41%;
-  margin-bottom: 3%;
+  margin-bottom: 2.5%;
 }
 
 input[type="file"] {
@@ -209,7 +229,7 @@ input[type="file"] {
   color: deeppink;
 }
 
-label:hover {
+#fileUpload:hover {
   background-color: #5ecfd1;
   box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
   color: #fff;
@@ -226,7 +246,7 @@ label:hover {
   letter-spacing: 0.1%;
   line-height: 2.5rem;
   font-weight: 500;
-  color: #000;
+  color: #333;
   background-color: #ddd;
   border: none;
   border-radius: 45px;
@@ -234,9 +254,9 @@ label:hover {
   transition: all 0.3s ease 0s;
   cursor: pointer;
   outline: none;
-  margin-top: 2.5%;
+  margin-top: 1.5%;
   margin-left: 41%;
-  margin-bottom: 2%;
+  margin-bottom: 1%;
 }
 
 .button:hover {

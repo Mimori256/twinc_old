@@ -159,6 +159,34 @@ const rescheduledClassList = [
   "秋C:金",
   "秋C:月"
 ];
+const deadlinesDate = [
+  "20210407",
+  "20210420",
+  "20210511",
+  "20210526",
+  "20210622",
+  "20210707",
+  "20210921",
+  "20211014",
+  "20211101",
+  "20211117",
+  "20211222",
+  "20220118"
+];
+const deadlinesDetail = [
+  "春A事前登録締め切り日",
+  "春A履修登録締切日",
+  "春B事前登録締め切り日",
+  "春B履修登録締切日",
+  "春C事前登録締め切り日",
+  "春C履修登録締切日",
+  "秋A事前登録締め切り日",
+  "秋A履修登録締切日",
+  "秋B事前登録締め切り日",
+  "秋B履修登録締切日",
+  "秋C事前登録締め切り日",
+  "秋C履修登録締切日"
+];
 const addZero = str => {
   return str.length === 1 && str !== "T" ? "0" + str : str;
 };
@@ -327,7 +355,7 @@ const removeHolidays = (module, period) => {
     }
   }
   //Check if the list is blank
-  if (holidaysList.length === 0) {
+  if (!holidaysList.length) {
     return "";
   }
   for (let i = 0; i < holidaysList.length; i++) {
@@ -346,7 +374,27 @@ const removeABCHolidays = (module, period) => {
   }
   return exdate + "\n";
 };
-const parseCsv = (idList, kdb) => {
+const addDeadlines = () => {
+  let deadlinesList = [];
+  let misc =
+    "DTSTAMP:20210408T000000\nCREATED:20210408T000000\nSTATUS:CONFIRMED\nTRANSP:TRANSPARENT\n";
+  let dtstart;
+  let dtend;
+  let nextDate;
+  let summary;
+  let icsEvent;
+  for (let i = 0; i < deadlinesDate.length; i++) {
+    dtstart = "DTSTART;VALUE=DATE:" + deadlinesDate[i] + "\n";
+    nextDate = String(Number(deadlinesDate[i]) + 1);
+    dtend = "DTEND;VALUE=DATE:" + nextDate + "\n";
+    summary = "SUMMARY:" + deadlinesDetail[i] + "\n";
+    icsEvent =
+      "BEGIN:VEVENT\n" + dtstart + dtend + misc + summary + "END:VEVENT\n";
+    deadlinesList.push(icsEvent);
+  }
+  return deadlinesList.join("");
+};
+const parseCsv = (idList, kdb, isChecked) => {
   let output =
     "BEGIN:VCALENDAR\nPRODID:-//gam0022//TwinC 1.0//EN\nVERSION:2.0\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:授業時間割\nX-WR-TIMEZONE:Asia/Tokyo\nX-WR-CALDESC:授業時間割\nBEGIN:VTIMEZONE\nTZID:Asia/Tokyo\nX-LIC-LOCATION:Asia/Tokyo\nBEGIN:STANDARD\nTZOFFSETFROM:+0900\nTZOFFSETTO:+0900\nTZNAME:JST\nDTSTART:19700102T000000\nEND:STANDARD\nEND:VTIMEZONE\n";
   idList = idList.map(x => x.replace(/[\"]/g, ""));
@@ -376,9 +424,9 @@ const parseCsv = (idList, kdb) => {
     let devidedModule;
     let devidedPeriod;
     let rescheduleIndex;
-    for (let a = 0; a < modulePeriodList.length; a++) {
-      module = modulePeriodList[a][0];
-      period = modulePeriodList[a][1];
+    for (let j = 0; j < modulePeriodList.length; j++) {
+      module = modulePeriodList[j][0];
+      period = modulePeriodList[j][1];
       let icsEvent = "";
       if (!isAvailableModule(module) || !isAvaibaleDay(period)) continue;
       if (module.slice(1) === "ABC") {
@@ -396,8 +444,8 @@ const parseCsv = (idList, kdb) => {
         output += eventBegin + icsEvent + eventEnd;
         isABC = false;
       }
-      for (let j = 1; j < module.length; j++) {
-        devidedModule = module[0] + module[j];
+      for (let k = 1; k < module.length; k++) {
+        devidedModule = module[0] + module[k];
         devidedPeriod = period[0];
         rescheduleIndex = rescheduledClassList.indexOf(
           devidedModule + ":" + devidedPeriod
@@ -410,6 +458,10 @@ const parseCsv = (idList, kdb) => {
         }
       }
     }
+  }
+  //Add register deadlines to the calendar if checked
+  if (isChecked) {
+    output += addDeadlines();
   }
   return [output, true];
 };
