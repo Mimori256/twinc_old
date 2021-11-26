@@ -115,6 +115,7 @@ const fallAHolidays: string[] = [
 const fallBHolidays: string[] = [
   "20211123",
   "20211125",
+  "20211126",
   "20211129",
   "20211130"
 ];

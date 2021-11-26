@@ -99,7 +99,7 @@ const springAHolidays = [
 const springBHolidays = [];
 const springCHolidays = ["20210722", "20210723"];
 const fallAHolidays = ["20211103", "20211105", "20211108", "20211109"];
-const fallBHolidays = ["20211123", "20211125", "20211129", "20211130"];
+const fallBHolidays = ["20211123", "20211125", "20211126", "20211129", "20211130"];
 const fallCHolidays = [
   "20220110",
   "20220113",
