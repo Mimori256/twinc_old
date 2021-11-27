@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.GH_ADMIN_TOKEN }}
+          token: ${{ secrets.GHTOKEN }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
       - name: Install
