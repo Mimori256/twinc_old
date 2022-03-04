@@ -216,7 +216,7 @@ input[type="checkbox"] {
   cursor: pointer;
   outline: none;
   margin-top: 1.5%;
-  margin-left: 41%;
+  margin-left: 41.5%;
   margin-bottom: 2.5%;
 }
 
@@ -225,8 +225,9 @@ input[type="file"] {
 }
 
 #fileName {
-  margin-right: 5%;
   color: deeppink;
+  margin-right: 5%;
+  white-space: nowrap;
 }
 
 #fileUpload:hover {
@@ -255,7 +256,7 @@ input[type="file"] {
   cursor: pointer;
   outline: none;
   margin-top: 1.5%;
-  margin-left: 41%;
+  margin-left: 41.5%;
   margin-bottom: 1%;
 }
 
@@ -283,13 +284,19 @@ input[type="file"] {
     overflow: scroll;
   }
   label {
-    margin: 10% auto;
+    margin: 5% auto;
   }
   .button {
-    margin: 10% auto;
+    width: 8rem;
+    margin: 5% 28%;
   }
+
+  #fileUpload {
+    margin: 5% 28%;
+  }
+
   #fileName {
-    margin: 0 auto;
+    margin: 0 10%;
   }
 }
 </style>
