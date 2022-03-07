@@ -288,7 +288,8 @@ input[type="file"] {
   }
   .button {
     width: 8rem;
-    margin: 5% 28%;
+    margin-top: 5%;
+    margin-left: 32%;
   }
 
   #fileUpload {

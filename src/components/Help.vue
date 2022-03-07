@@ -18,7 +18,7 @@
           <p>(ちなみに、このファイルはTwin:teの授業登録にも使えます)</p>
           <p>KdBもどきからカレンダーを作る場合</p>
           <p>
-            1．KdBもどきにPCでアクセスする</br>
+            1．<a href="https://make-it-tsukuba.github.io/alternative-tsukuba-kdb/" target="_blank" rel="nooperner">KdBもどき</a>にPCでアクセスする</br>
              2．仮の履修時間割を組む</br>
             3．検索条件をクリアし、「お気に入り」にチェックを入れて検索する</br>
             4．画面最下部の「CSVダウンロード」をクリックする
