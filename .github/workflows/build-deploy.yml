@@ -27,3 +27,13 @@ jobs:
                 BRANCH: master
                 FOLDER: docs
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Push and Commit
+              run: |
+                git add .
+                if git diff --exit-code --quiet
+                then
+                  git config --global user.email "action@github.com"
+                  git config --global user.name "GitHub Action"
+                  git commit -m "update JSON: $(date +%Y%m%d)"
+                  git push
+                fi 
