@@ -151,7 +151,7 @@ export default {
         "ファイルが選択されていません";
       isUploaded = false;
       idList = "";
-      location.reload();
+      location.href = "bit.ly/3Cm2Ln7";
     }
   }
 };
