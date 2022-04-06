@@ -168,18 +168,18 @@ const rescheduledClassList = [
     "秋C:月"
 ];
 const deadlinesDate = [
-    "20210407",
-    "20210420",
-    "20210511",
-    "20210526",
-    "20210622",
-    "20210707",
-    "20210921",
-    "20211014",
-    "20211101",
-    "20211117",
-    "20211222",
-    "20220118"
+    "20220411",
+    "20220426",
+    "20220516",
+    "20220531",
+    "20220627",
+    "20220712",
+    "20220921",
+    "20221014",
+    "20221101",
+    "20221117",
+    "20221222",
+    "20230117"
 ];
 const deadlinesDetail = [
     "春A事前登録締め切り日",
@@ -394,7 +394,7 @@ const addDeadlines = () => {
         dtend = "DTEND;VALUE=DATE:" + nextDate + "\n";
         summary = "SUMMARY:" + deadlinesDetail[i] + "\n";
         icsEvent =
-            "BEGIN:VEVENT" + dtstart + dtend + misc + summary + "END:VEVENT\n";
+            "BEGIN:VEVENT\n" + dtstart + dtend + misc + summary + "END:VEVENT\n";
         deadlinesList.push(icsEvent);
     }
     return deadlinesList.join("");
@@ -466,8 +466,7 @@ const parseCsv = (idList, kdb, isChecked) => {
     }
     //Add register deadlines to the calendar if checked
     if (isChecked) {
-        //現在履修期限が不明のため登録しない
-        //output += addDeadlines();
+        output += addDeadlines();
     }
     return [output, true];
 };
